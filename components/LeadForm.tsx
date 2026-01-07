@@ -13,60 +13,45 @@ const LeadForm: React.FC = () => {
     _gotcha: '' 
   });
 
-  // URL Web App Google Apps Script của bạn
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxgYeEsipvQzyba6-RqaZF_4lJ8XtSbRpVl9nWQ7ZdY-HRbEWf5c3kA6PIrhFSagL0a/exec";
+  // Chuyển sang Formspree theo yêu cầu của bạn để đảm bảo ổn định 100%
+  const FORMSPREE_URL = "https://formspree.io/f/mrebnbag";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData._gotcha) return;
+    if (formData._gotcha) return; // Chặn bot
 
     setLoading(true);
 
-    // Payload khớp chính xác với cấu trúc script bạn cung cấp
+    // Chuẩn bị dữ liệu gửi đi
     const payload = {
       name: formData.fullName,
       phone: formData.phone,
       email: formData.email,
       service: formData.service,
       note: formData.note,
-      page: window.location.href
+      page_url: window.location.href,
+      _subject: `Khách hàng mới từ JapanFlex: ${formData.fullName}`
     };
 
     try {
-      // Sử dụng fetch với cấu hình tối ưu cho Google Apps Script
-      const response = await fetch(WEB_APP_URL, {
+      const response = await fetch(FORMSPREE_URL, {
         method: "POST",
-        mode: "cors", // Đảm bảo chế độ CORS
         headers: { 
-          "Content-Type": "text/plain;charset=utf-8" 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
         },
-        body: JSON.stringify(payload),
-        redirect: "follow" // Quan trọng: Tự động theo dõi chuyển hướng của Google
+        body: JSON.stringify(payload)
       });
       
-      // Google Apps Script đôi khi trả về text thay vì JSON nếu có lỗi cấu hình
-      const textResponse = await response.text();
-      let result;
-      try {
-        result = JSON.parse(textResponse);
-      } catch (e) {
-        // Nếu không parse được JSON, kiểm tra nếu response.ok (có thể là thành công nhưng không trả về JSON)
-        if (response.ok || textResponse.includes("success")) {
-          result = { ok: true };
-        } else {
-          throw new Error("Phản hồi từ máy chủ không hợp lệ");
-        }
-      }
-      
-      if (result.ok) {
+      if (response.ok) {
         setSubmitted(true);
       } else {
-        alert("❌ Lỗi: " + (result.error || "Vui lòng kiểm tra lại cấu hình Google Script"));
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Gửi form thất bại");
       }
     } catch (error: any) {
-      console.error("Submit error details:", error);
-      // Thông báo chi tiết hơn để người dùng biết cách xử lý
-      alert("❌ Lỗi kết nối: " + error.message + "\n\nLưu ý: Hãy đảm bảo bạn đã chọn 'Anyone' trong phần 'Who has access' khi Deploy Google Script.");
+      console.error("Formspree error:", error);
+      alert("❌ Lỗi gửi tin: " + error.message + ". Vui lòng thử lại hoặc liên hệ Zalo!");
     } finally {
       setLoading(false);
     }
@@ -86,17 +71,20 @@ const LeadForm: React.FC = () => {
           <div className="p-12 lg:p-16 lg:w-5/12 text-white flex flex-col justify-center bg-kimono-red relative">
             <div className="absolute inset-0 bg-black/20"></div>
             <div className="relative z-10">
-              <span className="inline-block bg-yellow-400 text-red-900 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-6">Liên hệ ngay</span>
-              <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight font-luxury italic">Khởi đầu hành trình <br/>độc bản của bạn</h2>
+              <span className="inline-block bg-yellow-400 text-red-900 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-6">Liên hệ chuyên gia</span>
+              {/* Cập nhật tiêu đề theo yêu cầu */}
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight font-luxury italic">
+                Kiến tạo hành trình <br/><span className="text-yellow-400">Độc bản & Đẳng cấp</span>
+              </h2>
               <p className="text-red-50 text-lg mb-12 leading-relaxed opacity-90 font-light">
-                Mọi thông tin sẽ được lưu trữ trực tiếp vào hệ thống quản lý Google Sheet để chúng tôi phản hồi nhanh nhất.
+                Hãy để chúng tôi lắng nghe mong muốn của bạn. Bản thiết kế lịch trình sơ bộ sẽ được gửi tới Email trong vòng 24h.
               </p>
               
               <div className="space-y-6">
                 {[
-                  { title: "Tư vấn 1:1", desc: "Hoàn toàn miễn phí & tận tâm" },
-                  { title: "Báo giá minh bạch", desc: "Không phát sinh phụ phí ẩn" },
-                  { title: "Hệ thống tự động", desc: "Ghi nhận thông tin tức thì" }
+                  { title: "Tư vấn cá nhân hóa", desc: "Phù hợp chính xác ngân sách & sở thích" },
+                  { title: "Hỗ trợ Visa Nhật", desc: "Xử lý hồ sơ chuyên nghiệp, nhanh chóng" },
+                  { title: "Đồng hành 24/7", desc: "Hỗ trợ trực tiếp qua Zalo suốt chuyến đi" }
                 ].map((item, i) => (
                   <div key={i} className="flex items-start space-x-4">
                     <div className="w-10 h-10 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 border border-white/20">
@@ -120,17 +108,18 @@ const LeadForm: React.FC = () => {
                 </div>
                 <h3 className="text-4xl font-bold text-slate-900 mb-4 font-luxury">Gửi thành công!</h3>
                 <p className="text-slate-500 text-lg max-w-md mx-auto leading-relaxed">
-                  Dữ liệu của <strong>{formData.fullName}</strong> đã được ghi nhận vào Google Sheet. Chúng tôi sẽ sớm liên hệ qua số <strong>{formData.phone}</strong>.
+                  Cảm ơn <strong>{formData.fullName}</strong>. Chúng tôi đã nhận được yêu cầu của bạn và sẽ phản hồi qua <strong>{formData.phone}</strong> trong thời gian sớm nhất.
                 </p>
                 <button 
-                  onClick={() => { setSubmitted(false); setFormData({...formData, fullName: '', phone: '', email: '', note: ''}); }} 
-                  className="mt-10 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all flex items-center space-x-2 shadow-lg"
+                  onClick={() => { setSubmitted(false); setFormData({fullName: '', phone: '', email: '', service: 'Tour Private', note: '', _gotcha: ''}); }} 
+                  className="mt-10 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-lg"
                 >
-                  <span>Gửi thêm yêu cầu khác</span>
+                  Gửi thêm yêu cầu khác
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Honeypot field để chặn spam */}
                 <input type="text" name="_gotcha" style={{display:'none'}} onChange={handleChange} />
                 
                 <div className="grid md:grid-cols-2 gap-6">
@@ -142,7 +131,7 @@ const LeadForm: React.FC = () => {
                       value={formData.fullName}
                       onChange={handleChange}
                       required 
-                      placeholder="Nguyễn Minh Hoàng"
+                      placeholder="Ví dụ: Nguyễn Minh Hoàng"
                       className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none font-medium" 
                     />
                   </div>
@@ -162,14 +151,14 @@ const LeadForm: React.FC = () => {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Email *</label>
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Email liên hệ *</label>
                     <input 
                       type="email" 
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       required 
-                      placeholder="email@cua-ban.com"
+                      placeholder="email@vi-du.com"
                       className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none font-medium" 
                     />
                   </div>
@@ -185,20 +174,20 @@ const LeadForm: React.FC = () => {
                       <option value="Visa Nhật Bản">Tư vấn Visa Nhật Bản</option>
                       <option value="Tour Golf">Nghỉ dưỡng & Đánh Golf</option>
                       <option value="Tầm soát sức khỏe">Du lịch & Tầm soát sức khỏe</option>
-                      <option value="Dịch vụ khác">Yêu cầu khác...</option>
+                      <option value="Yêu cầu khác">Yêu cầu khác...</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Mong muốn cụ thể</label>
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Yêu cầu cụ thể</label>
                   <textarea 
                     name="note"
                     value={formData.note}
                     onChange={handleChange}
                     rows={4} 
                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none resize-none font-medium" 
-                    placeholder="Ghi chú thêm về yêu cầu của bạn..."
+                    placeholder="Hãy cho chúng tôi biết thêm về số lượng người, thời điểm đi hoặc các địa điểm bạn muốn ghé thăm..."
                   ></textarea>
                 </div>
                 
@@ -217,8 +206,8 @@ const LeadForm: React.FC = () => {
                   )}
                 </button>
                 
-                <p className="text-center text-[11px] text-slate-400 font-bold uppercase tracking-widest pt-2">
-                  🔒 Dữ liệu được bảo mật và lưu trữ an toàn trên Google Cloud
+                <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] pt-2">
+                  🔒 Chúng tôi cam kết bảo mật 100% thông tin cá nhân của bạn
                 </p>
               </form>
             )}

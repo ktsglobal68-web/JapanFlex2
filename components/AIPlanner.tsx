@@ -25,11 +25,11 @@ const AIPlanner: React.FC = () => {
       if (itinerary) {
         setResult(itinerary);
       } else {
-        setErrorMsg("Hiện tại kết nối tới máy chủ AI đang gặp gián đoạn. Vui lòng bấm thử lại hoặc kiểm tra kết nối mạng.");
+        setErrorMsg("Kết nối AI đang quá tải hoặc bị gián đoạn. Vui lòng thử lại sau vài giây.");
       }
     } catch (err) {
       console.error("Submit error:", err);
-      setErrorMsg("Đã có lỗi xảy ra trong quá trình thiết lập hành trình. Vui lòng thử lại sau.");
+      setErrorMsg("Đã xảy ra lỗi không xác định. Vui lòng kiểm tra kết nối mạng.");
     } finally {
       setLoading(false);
     }
@@ -118,14 +118,15 @@ const AIPlanner: React.FC = () => {
               {loading ? (
                 <span className="flex items-center justify-center">
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                  Đang khởi tạo kết nối AI...
+                  Đang kết nối AI...
                 </span>
               ) : '✨ Tạo lịch trình ngay'}
             </button>
             
             {errorMsg && (
-              <div className="mt-4 p-4 bg-red-900/30 border border-red-500/50 rounded-xl text-red-200 text-sm animate-pulse">
-                ⚠️ {errorMsg}
+              <div className="mt-4 p-4 bg-red-900/40 border border-red-500/50 rounded-xl text-red-100 text-sm flex items-center space-x-3 animate-pulse">
+                <span>⚠️</span>
+                <span>{errorMsg}</span>
               </div>
             )}
           </form>
@@ -135,7 +136,7 @@ const AIPlanner: React.FC = () => {
               <div className="h-full flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-slate-700 rounded-3xl opacity-50 bg-slate-800/50">
                 <div className="text-6xl mb-4">🗺️</div>
                 <p className="text-xl font-medium">Lịch trình của bạn sẽ xuất hiện tại đây</p>
-                <p className="text-slate-500 mt-2">Được hỗ trợ bởi công nghệ Gemini 3 Flash</p>
+                <p className="text-slate-500 mt-2">Dữ liệu được xử lý bởi Gemini 3 Flash</p>
               </div>
             )}
 
@@ -149,7 +150,7 @@ const AIPlanner: React.FC = () => {
                   <div className="w-full h-4 bg-slate-700 rounded mx-auto"></div>
                   <div className="w-5/6 h-4 bg-slate-700 rounded mx-auto"></div>
                 </div>
-                <p className="text-slate-500 text-sm font-medium italic text-center">Vui lòng đợi giây lát, AI đang thiết kế tuyến đường tối ưu cho chuyến đi của bạn...</p>
+                <p className="text-slate-500 text-sm font-medium italic text-center">AI đang kiến tạo hành trình riêng cho bạn. Vui lòng đợi trong giây lát...</p>
               </div>
             )}
 
@@ -158,7 +159,7 @@ const AIPlanner: React.FC = () => {
                 <div className="flex justify-between items-start mb-6 border-b pb-4">
                   <div>
                     <h3 className="text-2xl font-bold text-red-600">Hành trình Độc bản</h3>
-                    <p className="text-slate-500 font-medium italic">Kiến tạo cho bạn bởi JapanFlex</p>
+                    <p className="text-slate-500 font-medium italic">Thiết kế bởi JapanFlex AI</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs uppercase text-slate-400 font-bold">Dự tính chi phí</p>

@@ -106,15 +106,12 @@ const LeadForm: React.FC = () => {
                   <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
                 </div>
                 <h3 className="text-4xl font-bold text-slate-900 mb-4 font-luxury">Gửi thành công!</h3>
-                <p className="text-slate-500 text-lg max-w-md mx-auto leading-relaxed mb-6">
-                  Cảm ơn <strong>{formData.fullName}</strong>. Chúng tôi đã nhận được yêu cầu của bạn.
+                <p className="text-slate-500 text-lg max-w-md mx-auto leading-relaxed mb-10">
+                  Cảm ơn <strong>{formData.fullName}</strong>. Chúng tôi đã nhận được yêu cầu của bạn và sẽ liên hệ lại trong thời gian sớm nhất.
                 </p>
-                <div className="p-4 bg-yellow-50 rounded-2xl text-yellow-800 text-sm mb-8 border border-yellow-100 max-w-sm">
-                  💡 <strong>Lưu ý:</strong> Nếu bạn là chủ sở hữu website, vui lòng kiểm tra hòm thư (kể cả mục Spam) để <strong>Xác nhận Form</strong> từ Formspree thì email mới được kích hoạt hoàn toàn.
-                </div>
                 <button 
                   onClick={() => { setSubmitted(false); setFormData({fullName: '', phone: '', email: '', service: 'Tour Private', note: '', _gotcha: ''}); }} 
-                  className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-lg"
+                  className="bg-slate-900 text-white px-10 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-lg active:scale-95"
                 >
                   Gửi thêm yêu cầu khác
                 </button>

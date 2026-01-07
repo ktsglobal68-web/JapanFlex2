@@ -9,55 +9,49 @@ export const generateCustomItinerary = async (params: {
   interests: string;
 }): Promise<CustomItineraryResponse | null> => {
   try {
-    // Khởi tạo AI với API Key từ môi trường
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
-    // Prompt tối giản nhưng hiệu quả cao
-    const prompt = `Lập lịch trình du lịch Nhật Bản ${params.days} ngày.
-Phong cách: ${params.style}, Ngân sách: ${params.budget}.
-Yêu cầu: ${params.interests || "Không có"}.
+    // Yêu cầu AI trả về JSON cực kỳ nghiêm ngặt
+    const prompt = `Hành động như một chuyên gia du lịch Nhật Bản cao cấp. Lập lịch trình ${params.days} ngày cho phong cách ${params.style}, ngân sách ${params.budget}. 
+Yêu cầu riêng: ${params.interests || "Không có"}.
 
-Bạn PHẢI trả về dữ liệu dưới dạng JSON thuần túy theo cấu trúc này:
+TRẢ VỀ DUY NHẤT JSON THEO CẤU TRÚC:
 {
   "itinerary": [
-    {"day": 1, "title": "Tên ngày", "activities": ["Hoạt động 1", "Hoạt động 2"], "tips": "Lời khuyên"}
+    {"day": 1, "title": "Tiêu đề", "activities": ["HĐ1", "HĐ2"], "tips": "Mẹo nhỏ"}
   ],
-  "totalEstimatedCost": "Ước tính chi phí",
-  "recommendations": ["Gợi ý 1", "Gợi ý 2"]
-}
-Chỉ trả về JSON, không kèm văn bản khác.`;
+  "totalEstimatedCost": "Giá dự kiến",
+  "recommendations": ["Gợi ý"]
+}`;
 
-    // Gọi API với cấu hình an toàn nhất
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: prompt, // Sử dụng chuỗi trực tiếp để tăng độ ổn định
+      contents: prompt,
       config: {
-        responseMimeType: "application/json"
+        responseMimeType: "application/json",
+        temperature: 0.7, // Tăng độ sáng tạo nhưng vẫn giữ trong khuôn khổ JSON
       }
     });
 
-    const text = response.text;
-    if (!text) {
-      console.error("Gemini: Empty response");
-      return null;
-    }
+    const text = response.text?.trim();
+    if (!text) return null;
 
-    // Bộ lọc JSON mạnh mẽ để xử lý lỗi "Hệ thống bận" do parse thất bại
+    // Xử lý JSON linh hoạt hơn (loại bỏ markdown nếu AI lỡ tay thêm vào)
     try {
-      const startIdx = text.indexOf('{');
-      const endIdx = text.lastIndexOf('}');
-      if (startIdx !== -1 && endIdx !== -1) {
-        const cleanJson = text.substring(startIdx, endIdx + 1);
-        return JSON.parse(cleanJson) as CustomItineraryResponse;
-      }
-      return JSON.parse(text) as CustomItineraryResponse;
+      const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
+      return JSON.parse(cleanText) as CustomItineraryResponse;
     } catch (parseError) {
-      console.error("Gemini: JSON Parse Error", text);
-      return null;
+      // Fallback: Tìm cặp dấu ngoặc nhọn đầu tiên và cuối cùng
+      const firstBrace = text.indexOf('{');
+      const lastBrace = text.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace !== -1) {
+        const potentialJson = text.substring(firstBrace, lastBrace + 1);
+        return JSON.parse(potentialJson) as CustomItineraryResponse;
+      }
+      throw parseError;
     }
   } catch (error) {
-    console.error("Gemini: Connection Error", error);
-    // Trả về null để UI xử lý thông báo lỗi cho người dùng
+    console.error("Gemini Critical Error:", error);
     return null;
   }
 };

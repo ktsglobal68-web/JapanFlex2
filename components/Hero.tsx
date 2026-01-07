@@ -86,14 +86,15 @@ const Hero: React.FC = () => {
             />
           </div>
           
-          <div className="absolute -bottom-6 -right-8 bg-white/95 backdrop-blur-xl p-6 rounded-3xl shadow-2xl max-w-[260px] z-20 border-l-[6px] border-l-yellow-500 border border-white/20">
-            <div className="flex items-center space-x-0.5 text-yellow-500 mb-2">
-              {[1,2,3,4,5].map(i => <span key={i} className="text-xs">★</span>)}
+          {/* Nhỏ gọn và né góc hơn để nhìn rõ ảnh */}
+          <div className="absolute -bottom-4 -right-4 bg-white/95 backdrop-blur-xl p-4 rounded-2xl shadow-2xl max-w-[210px] z-20 border-l-[4px] border-l-yellow-500 border border-white/20">
+            <div className="flex items-center space-x-0.5 text-yellow-500 mb-1.5 scale-75 origin-left">
+              {[1,2,3,4,5].map(i => <span key={i}>★</span>)}
             </div>
-            <p className="text-slate-800 font-bold text-sm leading-relaxed italic">
-              "Xe riêng đưa đón tận nơi, lịch trình linh hoạt theo sức khỏe của bố mẹ tôi. Rất hài lòng!"
+            <p className="text-slate-800 font-bold text-[11px] leading-relaxed italic">
+              "Xe riêng đưa đón, lịch trình linh hoạt theo sức khỏe bố mẹ tôi. Rất hài lòng!"
             </p>
-            <p className="text-slate-400 text-[10px] mt-3 uppercase tracking-widest font-black">— Anh Nguyễn Minh Hoàng</p>
+            <p className="text-slate-400 text-[8px] mt-2 uppercase tracking-widest font-black opacity-80">— ANH NGUYỄN MINH HOÀNG</p>
           </div>
         </div>
       </div>

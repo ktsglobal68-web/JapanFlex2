@@ -9,16 +9,18 @@ export const generateCustomItinerary = async (params: {
   interests: string;
 }): Promise<CustomItineraryResponse | null> => {
   try {
-    // Fix: Create GoogleGenAI instance right before making an API call
+    // Luôn khởi tạo instance mới để đảm bảo lấy đúng API Key mới nhất
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `Design a custom Japan travel itinerary for a ${params.days}-day trip. 
-      Style: ${params.style}. 
-      Budget level: ${params.budget}. 
-      Interests: ${params.interests}. 
-      Provide specific locations and estimated daily activities in Vietnamese.`,
+      model: "gemini-3-pro-preview",
+      contents: `Lập lịch trình du lịch Nhật Bản chi tiết cho chuyến đi ${params.days} ngày. 
+      Phong cách: ${params.style}. 
+      Mức ngân sách: ${params.budget}. 
+      Yêu cầu riêng: ${params.interests || "Không có yêu cầu đặc biệt"}. 
+      Hãy đưa ra các địa điểm cụ thể và hoạt động hàng ngày hấp dẫn bằng tiếng Việt.`,
       config: {
+        systemInstruction: "Bạn là chuyên gia tư vấn lữ hành cao cấp tại JapanFlex. Nhiệm vụ của bạn là thiết kế lịch trình du lịch Nhật Bản độc bản, sang trọng và cá nhân hóa. Phản hồi phải luôn ở định dạng JSON chuẩn theo schema được cung cấp.",
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,

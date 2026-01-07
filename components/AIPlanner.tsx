@@ -15,9 +15,18 @@ const AIPlanner: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Reset kết quả cũ để hiển thị trạng thái loading cho lịch trình mới
+    setResult(null);
     setLoading(true);
+    
     const itinerary = await generateCustomItinerary(formData);
-    setResult(itinerary);
+    
+    if (itinerary) {
+      setResult(itinerary);
+    } else {
+      // Xử lý khi có lỗi hoặc không có phản hồi
+      alert("Không thể tạo lịch trình vào lúc này. Vui lòng thử lại sau.");
+    }
     setLoading(false);
   };
 
@@ -35,7 +44,7 @@ const AIPlanner: React.FC = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">✨ Trợ lý AI Lên Lịch Trình Tức Thì</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            Mô tả chuyến đi trong mơ của bạn, công nghệ Gemini AI của chúng tôi sẽ thiết kế một lịch trình riêng biệt chỉ trong vài giây.
+            Mô tả chuyến đi trong mơ của bạn, công nghệ Gemini 3 Pro của chúng tôi sẽ thiết kế một lịch trình riêng biệt chỉ trong vài giây.
           </p>
         </div>
 
@@ -69,14 +78,18 @@ const AIPlanner: React.FC = () => {
             <div className="mb-6">
               <label className="block text-sm font-medium text-slate-400 mb-2">Phong cách</label>
               <div className="grid grid-cols-3 gap-3">
-                {['family', 'couple', 'solo'].map(s => (
+                {[
+                  { id: 'family', label: 'Gia đình' },
+                  { id: 'couple', label: 'Cặp đôi' },
+                  { id: 'solo', label: 'Solo' }
+                ].map(s => (
                   <button
-                    key={s}
+                    key={s.id}
                     type="button"
-                    onClick={() => setFormData({...formData, style: s})}
-                    className={`py-2 px-4 rounded-xl font-bold transition-all ${formData.style === s ? 'bg-red-600 text-white' : 'bg-slate-700 text-slate-400 hover:bg-slate-600'}`}
+                    onClick={() => setFormData({...formData, style: s.id})}
+                    className={`py-2 px-4 rounded-xl font-bold transition-all ${formData.style === s.id ? 'bg-red-600 text-white shadow-lg' : 'bg-slate-700 text-slate-400 hover:bg-slate-600'}`}
                   >
-                    {s === 'family' ? 'Gia đình' : s === 'couple' ? 'Cặp đôi' : 'Solo'}
+                    {s.label}
                   </button>
                 ))}
               </div>
@@ -95,12 +108,12 @@ const AIPlanner: React.FC = () => {
             <button 
               type="submit" 
               disabled={loading}
-              className={`w-full py-4 rounded-xl font-bold text-lg shadow-xl shadow-red-900/20 transition-all ${loading ? 'bg-slate-600' : 'bg-red-600 hover:bg-red-700 hover:scale-[1.02]'}`}
+              className={`w-full py-4 rounded-xl font-bold text-lg shadow-xl transition-all ${loading ? 'bg-slate-600 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 hover:scale-[1.02] active:scale-95'}`}
             >
               {loading ? (
                 <span className="flex items-center justify-center">
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                  Đang thiết kế...
+                  Đang thiết kế lịch trình...
                 </span>
               ) : '✨ Tạo lịch trình ngay'}
             </button>
@@ -108,7 +121,7 @@ const AIPlanner: React.FC = () => {
 
           <div className="min-h-[500px]">
             {!result && !loading && (
-              <div className="h-full flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-slate-700 rounded-3xl opacity-50">
+              <div className="h-full flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-slate-700 rounded-3xl opacity-50 bg-slate-800/50">
                 <div className="text-6xl mb-4">🗺️</div>
                 <p className="text-xl font-medium">Lịch trình của bạn sẽ xuất hiện tại đây</p>
                 <p className="text-slate-500 mt-2">Vui lòng điền thông tin và bấm nút để bắt đầu</p>
@@ -116,23 +129,27 @@ const AIPlanner: React.FC = () => {
             )}
 
             {loading && (
-              <div className="h-full flex flex-col items-center justify-center space-y-4 animate-pulse">
+              <div className="h-full flex flex-col items-center justify-center space-y-6 animate-pulse p-12 bg-slate-800/30 rounded-3xl border border-slate-700">
                 <div className="w-16 h-16 bg-slate-700 rounded-full"></div>
-                <div className="w-48 h-4 bg-slate-700 rounded"></div>
-                <div className="w-64 h-4 bg-slate-700 rounded"></div>
+                <div className="w-full space-y-3">
+                  <div className="w-3/4 h-4 bg-slate-700 rounded mx-auto"></div>
+                  <div className="w-full h-4 bg-slate-700 rounded mx-auto"></div>
+                  <div className="w-5/6 h-4 bg-slate-700 rounded mx-auto"></div>
+                </div>
+                <p className="text-slate-500 text-sm font-medium">AI đang tính toán tuyến đường tối ưu cho bạn...</p>
               </div>
             )}
 
             {result && !loading && (
-              <div className="bg-white text-slate-900 rounded-3xl p-8 shadow-2xl h-full overflow-y-auto max-h-[600px] custom-scrollbar text-left">
+              <div className="bg-white text-slate-900 rounded-3xl p-8 shadow-2xl h-full overflow-y-auto max-h-[600px] custom-scrollbar text-left animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="flex justify-between items-start mb-6 border-b pb-4">
                   <div>
-                    <h3 className="text-2xl font-bold text-red-600">Lịch trình đề xuất</h3>
-                    <p className="text-slate-500 font-medium">Dành cho {formData.days} ngày</p>
+                    <h3 className="text-2xl font-bold text-red-600">Hành trình Độc bản</h3>
+                    <p className="text-slate-500 font-medium">Phong cách: {formData.style === 'family' ? 'Gia đình' : formData.style === 'couple' ? 'Cặp đôi' : 'Solo'}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs uppercase text-slate-400 font-bold">Dự tính chi phí</p>
-                    <p className="text-lg font-bold">{result.totalEstimatedCost}</p>
+                    <p className="text-lg font-bold text-slate-800">{result.totalEstimatedCost}</p>
                   </div>
                 </div>
 
@@ -144,11 +161,11 @@ const AIPlanner: React.FC = () => {
                       <ul className="space-y-1 mb-3">
                         {day.activities.map((act, i) => (
                           <li key={i} className="text-slate-600 text-sm flex items-start">
-                            <span className="text-red-500 mr-2">•</span> {act}
+                            <span className="text-red-500 mr-2 shrink-0">•</span> <span>{act}</span>
                           </li>
                         ))}
                       </ul>
-                      <div className="bg-slate-50 p-3 rounded-lg text-xs italic text-slate-500 border-l-2 border-red-200">
+                      <div className="bg-slate-50 p-3 rounded-xl text-xs italic text-slate-500 border-l-2 border-red-200">
                         💡 Tip: {day.tips}
                       </div>
                     </div>
@@ -156,11 +173,11 @@ const AIPlanner: React.FC = () => {
                 </div>
 
                 <div className="mt-8 pt-6 border-t text-left">
-                  <h4 className="font-bold mb-3">Gợi ý từ chuyên gia:</h4>
+                  <h4 className="font-bold mb-3 text-slate-800">Gợi ý từ chuyên gia JapanFlex:</h4>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {result.recommendations.map((rec, idx) => (
                       <li key={idx} className="text-sm text-slate-600 flex items-center bg-slate-50 p-2 rounded-lg">
-                        ✅ {rec}
+                        <span className="mr-2">✅</span> {rec}
                       </li>
                     ))}
                   </ul>
@@ -169,9 +186,9 @@ const AIPlanner: React.FC = () => {
                 <div className="mt-8">
                   <button 
                     onClick={scrollToLead}
-                    className="block w-full text-center bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg"
+                    className="block w-full text-center bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg active:scale-95"
                   >
-                    Đặt lịch với tư vấn viên ngay
+                    Nhận tư vấn chi tiết cho lịch trình này
                   </button>
                 </div>
               </div>

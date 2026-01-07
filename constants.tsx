@@ -12,7 +12,7 @@ export const TOURS: Tour[] = [
   {
     id: 'gold-route',
     title: 'Tour Cung Đường Vàng Private',
-    image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&q=80&w=1200',
     description: 'Trải nghiệm trọn vẹn tinh hoa Nhật Bản qua 3 thành phố biểu tượng với dịch vụ xe riêng và hướng dẫn viên tận tâm.',
     highlights: [
       'Xe riêng (Private Car) suốt hành trình',
@@ -29,7 +29,7 @@ export const TOURS: Tour[] = [
   {
     id: 'golf-luxury',
     title: 'Nghỉ Dưỡng & Đánh Golf Đẳng Cấp',
-    image: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&q=95&w=1000',
     description: 'Chinh phục những hố Golf thách thức với tầm nhìn trực diện núi Phú Sĩ hùng vĩ và tận hưởng dịch vụ 5 sao.',
     highlights: [
       'Chơi tại các sân Golf top đầu (Fuji Classic, Gotemba)',
@@ -63,7 +63,7 @@ export const TOURS: Tour[] = [
   {
     id: 'health-checkup',
     title: 'Du Lịch Kết Hợp Tầm Soát Sức Khỏe',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=crop&q=80&w=800',
+    image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=1200',
     description: 'An tâm tận hưởng chuyến đi kết hợp kiểm tra sức khỏe tổng quát với công nghệ tầm soát tiên tiến nhất thế giới.',
     highlights: [
       'Tầm soát ung thư sớm (Ningen Dock) tại bệnh viện lớn',
@@ -90,7 +90,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Trần Thanh Tuấn',
     location: 'TP.HCM',
-    text: 'AI Planner gợi ý lịch trình rất sát với thực tế. Tôi đã đi theo và tiết kiệm được rất nhiều thời gian di chuyển.',
+    text: 'AI Planner gợi ý lịch trình rất sát with thực tế. Tôi đã đi theo và tiết kiệm được rất nhiều thời gian di chuyển.',
     avatar: 'https://i.pravatar.cc/150?u=2',
     rating: 5
   },
@@ -272,7 +272,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Phạm Hoàng Khoa',
     location: 'TP.HCM',
-    text: 'Dịch vụ cao cấp, xứng đáng với số tiền bỏ ra. Private tour là sự lựa chọn đúng đắn.',
+    text: 'Dịch vụ cao cấp, xứng đáng with số tiền bỏ ra. Private tour là sự lựa chọn đúng đắn.',
     avatar: 'https://i.pravatar.cc/150?u=28',
     rating: 5
   },

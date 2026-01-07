@@ -15,19 +15,21 @@ const AIPlanner: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Reset kết quả cũ để hiển thị trạng thái loading cho lịch trình mới
     setResult(null);
     setLoading(true);
     
-    const itinerary = await generateCustomItinerary(formData);
-    
-    if (itinerary) {
-      setResult(itinerary);
-    } else {
-      // Xử lý khi có lỗi hoặc không có phản hồi
-      alert("Không thể tạo lịch trình vào lúc này. Vui lòng thử lại sau.");
+    try {
+      const itinerary = await generateCustomItinerary(formData);
+      if (itinerary) {
+        setResult(itinerary);
+      } else {
+        alert("Hệ thống đang bận hoặc gặp lỗi kết nối. Vui lòng thử lại sau giây lát.");
+      }
+    } catch (err) {
+      alert("Đã có lỗi xảy ra. Vui lòng kiểm tra lại thông tin và thử lại.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const scrollToLead = (e: React.MouseEvent) => {
@@ -44,7 +46,7 @@ const AIPlanner: React.FC = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">✨ Trợ lý AI Lên Lịch Trình Tức Thì</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            Mô tả chuyến đi trong mơ của bạn, công nghệ Gemini 3 Pro của chúng tôi sẽ thiết kế một lịch trình riêng biệt chỉ trong vài giây.
+            Mô tả chuyến đi trong mơ của bạn, công nghệ Gemini 3 Flash của chúng tôi sẽ thiết kế một lịch trình riêng biệt chỉ trong vài giây.
           </p>
         </div>
 
@@ -113,7 +115,7 @@ const AIPlanner: React.FC = () => {
               {loading ? (
                 <span className="flex items-center justify-center">
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                  Đang thiết kế lịch trình...
+                  AI đang lên lịch trình...
                 </span>
               ) : '✨ Tạo lịch trình ngay'}
             </button>
@@ -136,7 +138,7 @@ const AIPlanner: React.FC = () => {
                   <div className="w-full h-4 bg-slate-700 rounded mx-auto"></div>
                   <div className="w-5/6 h-4 bg-slate-700 rounded mx-auto"></div>
                 </div>
-                <p className="text-slate-500 text-sm font-medium">AI đang tính toán tuyến đường tối ưu cho bạn...</p>
+                <p className="text-slate-500 text-sm font-medium italic">Gemini 3 Flash đang tối ưu tuyến đường cho bạn...</p>
               </div>
             )}
 
@@ -145,7 +147,7 @@ const AIPlanner: React.FC = () => {
                 <div className="flex justify-between items-start mb-6 border-b pb-4">
                   <div>
                     <h3 className="text-2xl font-bold text-red-600">Hành trình Độc bản</h3>
-                    <p className="text-slate-500 font-medium">Phong cách: {formData.style === 'family' ? 'Gia đình' : formData.style === 'couple' ? 'Cặp đôi' : 'Solo'}</p>
+                    <p className="text-slate-500 font-medium italic">Được kiến tạo bởi AI chuyên gia</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs uppercase text-slate-400 font-bold">Dự tính chi phí</p>
@@ -173,7 +175,7 @@ const AIPlanner: React.FC = () => {
                 </div>
 
                 <div className="mt-8 pt-6 border-t text-left">
-                  <h4 className="font-bold mb-3 text-slate-800">Gợi ý từ chuyên gia JapanFlex:</h4>
+                  <h4 className="font-bold mb-3 text-slate-800">Gợi ý từ JapanFlex:</h4>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {result.recommendations.map((rec, idx) => (
                       <li key={idx} className="text-sm text-slate-600 flex items-center bg-slate-50 p-2 rounded-lg">
@@ -188,7 +190,7 @@ const AIPlanner: React.FC = () => {
                     onClick={scrollToLead}
                     className="block w-full text-center bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg active:scale-95"
                   >
-                    Nhận tư vấn chi tiết cho lịch trình này
+                    Nhận báo giá & Tư vấn chi tiết
                   </button>
                 </div>
               </div>

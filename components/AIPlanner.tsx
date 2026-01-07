@@ -23,10 +23,11 @@ const AIPlanner: React.FC = () => {
       if (itinerary) {
         setResult(itinerary);
       } else {
-        alert("Hệ thống đang bận hoặc gặp lỗi kết nối. Vui lòng thử lại sau giây lát.");
+        alert("Hiện tại máy chủ đang bận xử lý nhiều yêu cầu cùng lúc. Vui lòng bấm nút 'Tạo lịch trình' một lần nữa sau vài giây.");
       }
     } catch (err) {
-      alert("Đã có lỗi xảy ra. Vui lòng kiểm tra lại thông tin và thử lại.");
+      console.error("Submit error:", err);
+      alert("Đã có lỗi xảy ra trong quá trình kết nối. Vui lòng thử lại sau.");
     } finally {
       setLoading(false);
     }
@@ -115,7 +116,7 @@ const AIPlanner: React.FC = () => {
               {loading ? (
                 <span className="flex items-center justify-center">
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                  AI đang lên lịch trình...
+                  Đang thiết lập kết nối AI...
                 </span>
               ) : '✨ Tạo lịch trình ngay'}
             </button>
@@ -126,19 +127,21 @@ const AIPlanner: React.FC = () => {
               <div className="h-full flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-slate-700 rounded-3xl opacity-50 bg-slate-800/50">
                 <div className="text-6xl mb-4">🗺️</div>
                 <p className="text-xl font-medium">Lịch trình của bạn sẽ xuất hiện tại đây</p>
-                <p className="text-slate-500 mt-2">Vui lòng điền thông tin và bấm nút để bắt đầu</p>
+                <p className="text-slate-500 mt-2">Dữ liệu được xử lý bởi Gemini 3 Flash</p>
               </div>
             )}
 
             {loading && (
               <div className="h-full flex flex-col items-center justify-center space-y-6 animate-pulse p-12 bg-slate-800/30 rounded-3xl border border-slate-700">
-                <div className="w-16 h-16 bg-slate-700 rounded-full"></div>
+                <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center">
+                  <div className="w-8 h-8 bg-red-600 rounded-full animate-ping"></div>
+                </div>
                 <div className="w-full space-y-3">
                   <div className="w-3/4 h-4 bg-slate-700 rounded mx-auto"></div>
                   <div className="w-full h-4 bg-slate-700 rounded mx-auto"></div>
                   <div className="w-5/6 h-4 bg-slate-700 rounded mx-auto"></div>
                 </div>
-                <p className="text-slate-500 text-sm font-medium italic">Gemini 3 Flash đang tối ưu tuyến đường cho bạn...</p>
+                <p className="text-slate-500 text-sm font-medium italic">Vui lòng đợi trong giây lát, AI đang xử lý lịch trình độc bản cho bạn...</p>
               </div>
             )}
 
@@ -147,7 +150,7 @@ const AIPlanner: React.FC = () => {
                 <div className="flex justify-between items-start mb-6 border-b pb-4">
                   <div>
                     <h3 className="text-2xl font-bold text-red-600">Hành trình Độc bản</h3>
-                    <p className="text-slate-500 font-medium italic">Được kiến tạo bởi AI chuyên gia</p>
+                    <p className="text-slate-500 font-medium italic">Kiến tạo cho bạn bởi JapanFlex</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs uppercase text-slate-400 font-bold">Dự tính chi phí</p>
@@ -175,7 +178,7 @@ const AIPlanner: React.FC = () => {
                 </div>
 
                 <div className="mt-8 pt-6 border-t text-left">
-                  <h4 className="font-bold mb-3 text-slate-800">Gợi ý từ JapanFlex:</h4>
+                  <h4 className="font-bold mb-3 text-slate-800">Gợi ý từ chuyên gia:</h4>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {result.recommendations.map((rec, idx) => (
                       <li key={idx} className="text-sm text-slate-600 flex items-center bg-slate-50 p-2 rounded-lg">
@@ -190,7 +193,7 @@ const AIPlanner: React.FC = () => {
                     onClick={scrollToLead}
                     className="block w-full text-center bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg active:scale-95"
                   >
-                    Nhận báo giá & Tư vấn chi tiết
+                    Nhận tư vấn chi tiết cho chuyến đi này
                   </button>
                 </div>
               </div>

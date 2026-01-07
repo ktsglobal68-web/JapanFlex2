@@ -49,7 +49,7 @@ const AIPlanner: React.FC = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">✨ Trợ lý AI Lên Lịch Trình Tức Thì</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            Mô tả chuyến đi trong mơ của bạn, công nghệ Gemini 3 Flash của chúng tôi sẽ thiết kế một lịch trình riêng biệt chỉ trong vài giây.
+            Mô tả chuyến đi trong mơ của bạn, công nghệ Gemini 3 Flash của SigFlex Japan sẽ thiết kế một lịch trình riêng biệt chỉ trong vài giây.
           </p>
         </div>
 
@@ -159,7 +159,7 @@ const AIPlanner: React.FC = () => {
                 <div className="flex justify-between items-start mb-6 border-b pb-4">
                   <div>
                     <h3 className="text-2xl font-bold text-red-600">Hành trình Độc bản</h3>
-                    <p className="text-slate-500 font-medium italic">Thiết kế bởi JapanFlex AI</p>
+                    <p className="text-slate-500 font-medium italic">Thiết kế bởi SigFlex Japan AI</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs uppercase text-slate-400 font-bold">Dự tính chi phí</p>

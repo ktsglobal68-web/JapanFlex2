@@ -14,7 +14,7 @@ const WhyUs: React.FC = () => {
   const features = [
     { 
       title: 'Tùy chỉnh linh hoạt', 
-      desc: 'Phá bỏ rào cản tour đoàn truyền thống. Bạn là kiến trúc sư cho hành trình riêng mình, tự do khám phá theo nhịp sống cá nhân.', 
+      desc: 'Phá bỏ rào cản tour đoàn truyền thống. Bạn là kiến trúc sư cho hành trình riêng mình (Your Signature), tự do khám phá theo nhịp sống cá nhân.', 
       icon: (
         <svg className="w-14 h-14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 12h9" />
@@ -57,7 +57,7 @@ const WhyUs: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="text-center mb-20">
           <span className="text-red-600 font-bold tracking-[0.4em] uppercase text-xs mb-4 block">Khác Biệt Trong Từng Chi Tiết</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-luxury italic">Tại sao khách hàng chọn JapanFlex?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-luxury italic">Tại sao khách hàng chọn SigFlex Japan?</h2>
           <div className="w-24 h-1 bg-red-600 mx-auto rounded-full mb-6"></div>
           <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">
             Chúng tôi định nghĩa lại trải nghiệm du lịch bằng sự tỉ mỉ trong phục vụ và sự thấu hiểu sâu sắc văn hóa Phù Tang.
@@ -67,7 +67,6 @@ const WhyUs: React.FC = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {features.map((f, i) => (
             <div key={i} className="group relative bg-white p-10 rounded-[3rem] border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)] transition-all duration-500 flex flex-col items-center text-center hover:-translate-y-2">
-              {/* Icon Container: Nền đỏ nhạt (red-600 với độ mờ), Icon trắng và thông minh hơn */}
               <div className="w-28 h-28 bg-red-600/10 text-red-600 rounded-[2.5rem] flex items-center justify-center mb-8 group-hover:bg-red-600 group-hover:text-white transition-all duration-500 shadow-sm group-hover:shadow-red-500/30 group-hover:scale-110">
                 {f.icon}
               </div>
@@ -77,7 +76,6 @@ const WhyUs: React.FC = () => {
                 {f.desc}
               </p>
               
-              {/* Bottom decorative line */}
               <div className="mt-8 w-0 group-hover:w-16 h-1 bg-red-600 transition-all duration-500 rounded-full"></div>
             </div>
           ))}

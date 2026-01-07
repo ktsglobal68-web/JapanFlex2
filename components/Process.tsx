@@ -17,7 +17,7 @@ const steps = [
   {
     no: '03',
     title: 'Thủ tục Visa',
-    desc: 'JapanFlex xử lý hồ sơ Visa trọn gói với tỷ lệ đậu 99%. Bạn chỉ việc chuẩn bị hành lý.',
+    desc: 'SigFlex Japan xử lý hồ sơ Visa trọn gói với tỷ lệ đậu 99%. Bạn chỉ việc chuẩn bị hành lý.',
     icon: '🛂'
   },
   {

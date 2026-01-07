@@ -97,7 +97,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Lê Thu Hạnh',
     location: 'Đà Nẵng',
-    text: 'Cảm ơn JapanFlex đã hỗ trợ visa nhanh chóng. Tôi suýt nữa đã hủy chuyến đi nếu không có các bạn hỗ trợ hồ sơ.',
+    text: 'Cảm ơn SigFlex Japan đã hỗ trợ visa nhanh chóng. Tôi suýt nữa đã hủy chuyến đi nếu không có các bạn hỗ trợ hồ sơ.',
     avatar: 'https://i.pravatar.cc/150?u=3',
     rating: 5
   },
@@ -132,7 +132,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Bùi Thế Vinh',
     location: 'Bình Dương',
-    text: 'Gia đình tôi có bé nhỏ nhưng chuyến đi vẫn rất nhẹ nhàng nhờ sự sắp xếp chu đáo của JapanFlex.',
+    text: 'Gia đình tôi có bé nhỏ nhưng chuyến đi vẫn rất nhẹ nhàng nhờ sự sắp xếp chu đáo của SigFlex Japan.',
     avatar: 'https://i.pravatar.cc/150?u=8',
     rating: 5
   },
@@ -160,7 +160,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Trương Gia Bình',
     location: 'Quảng Ninh',
-    text: 'Lần đầu đi Nhật tự túc nhưng có JapanFlex đồng hành 24/7 qua Zalo nên tôi không hề lo lắng.',
+    text: 'Lần đầu đi Nhật tự túc nhưng có SigFlex Japan đồng hành 24/7 qua Zalo nên tôi không hề lo lắng.',
     avatar: 'https://i.pravatar.cc/150?u=12',
     rating: 5
   },
@@ -237,7 +237,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Phan Bích Phương',
     location: 'Quảng Ninh',
-    text: 'Lần đầu đi một mình mà không thấy bỡ ngỡ nhờ bộ cẩm nang chi tiết từ JapanFlex.',
+    text: 'Lần đầu đi một mình mà không thấy bỡ ngỡ nhờ bộ cẩm nang chi tiết từ SigFlex Japan.',
     avatar: 'https://i.pravatar.cc/150?u=23',
     rating: 5
   },
@@ -321,7 +321,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Phan Thị Mỹ Tâm',
     location: 'Đà Nẵng',
-    text: 'Một chuyến đi nhẹ nhàng, sâu lắng. Cảm ơn JapanFlex đã hiểu được mong muốn của mình.',
+    text: 'Một chuyến đi nhẹ nhàng, sâu lắng. Cảm ơn SigFlex Japan đã hiểu được mong muốn của mình.',
     avatar: 'https://i.pravatar.cc/150?u=35',
     rating: 5
   },
@@ -342,7 +342,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Trần Quang Vinh',
     location: 'TP.HCM',
-    text: 'Tôi đã đi Nhật nhiều lần nhưng lần này đi theo lịch trình của JapanFlex vẫn thấy nhiều điều mới mẻ.',
+    text: 'Tôi đã đi Nhật nhiều lần nhưng lần này đi theo lịch trình của SigFlex Japan vẫn thấy nhiều điều mới mẻ.',
     avatar: 'https://i.pravatar.cc/150?u=38',
     rating: 5
   },
@@ -398,7 +398,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Hồ Quang Hiếu',
     location: 'Buôn Ma Thuột',
-    text: 'Cảm ơn JapanFlex đã giúp mình có một chuyến đi Nhật ý nghĩa cùng gia đình.',
+    text: 'Cảm ơn SigFlex Japan đã giúp mình có một chuyến đi Nhật ý nghĩa cùng gia đình.',
     avatar: 'https://i.pravatar.cc/150?u=46',
     rating: 5
   },
@@ -419,7 +419,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Nguyễn Thị Hòa',
     location: 'Bắc Ninh',
-    text: 'Đưa con nhỏ đi du lịch Nhật Bản chưa bao giờ dễ dàng đến thế nhờ sự hỗ trợ của JapanFlex.',
+    text: 'Đưa con nhỏ đi du lịch Nhật Bản chưa bao giờ dễ dàng đến thế nhờ sự hỗ trợ của SigFlex Japan.',
     avatar: 'https://i.pravatar.cc/150?u=49',
     rating: 5
   },

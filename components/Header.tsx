@@ -23,14 +23,37 @@ const Header: React.FC = () => {
     }
   };
 
+  // Logo SVG tái hiện lại hình ảnh khách hàng gửi (SFJ + Fuji + Sakura)
+  const LogoSVG = () => (
+    <svg viewBox="0 0 100 100" className="w-full h-full">
+      <circle cx="50" cy="50" r="48" fill="#991b1b" stroke="white" strokeWidth="1" />
+      {/* Núi Phú Sĩ */}
+      <path d="M20 70 L50 25 L80 70 Z" fill="none" stroke="white" strokeWidth="1.5" strokeOpacity="0.5" />
+      <path d="M42 37 L50 45 L58 37 L50 25 Z" fill="white" />
+      {/* Chữ SFJ Cách điệu */}
+      <text x="50" y="62" fontFamily="serif" fontSize="32" fontWeight="900" fill="white" textAnchor="middle" style={{fontStyle: 'italic'}}>SFJ</text>
+      {/* Hoa anh đào trang trí */}
+      <circle cx="75" cy="45" r="2" fill="white" opacity="0.8" />
+      <circle cx="82" cy="55" r="1.5" fill="white" opacity="0.6" />
+      <circle cx="70" cy="75" r="2.5" fill="white" opacity="0.7" />
+    </svg>
+  );
+
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md py-3 shadow-lg' : 'bg-transparent py-5'}`}>
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
-        <a href="#" className="flex items-center space-x-2 group">
-          <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-xl group-hover:rotate-12 transition-transform shadow-lg border border-white/20">JP</div>
-          <span className={`text-2xl font-bold tracking-tight transition-colors ${scrolled ? 'text-slate-900' : 'text-white'}`}>
-            JapanFlex
-          </span>
+        <a href="#" className="flex items-center space-x-3 group">
+          <div className="w-12 h-12 relative rounded-full shadow-lg overflow-hidden bg-white/10 border border-white/20 transition-transform group-hover:scale-110">
+            <LogoSVG />
+          </div>
+          <div className="flex flex-col">
+            <span className={`text-xl md:text-2xl font-black tracking-tighter leading-none transition-colors ${scrolled ? 'text-slate-900' : 'text-white'}`}>
+              SigFlex Japan
+            </span>
+            <span className={`text-[8px] font-bold uppercase tracking-[0.2em] mt-1 transition-colors ${scrolled ? 'text-red-600' : 'text-yellow-400'}`}>
+              Your Signature. Our Flexibility
+            </span>
+          </div>
         </a>
 
         {/* Desktop Nav */}

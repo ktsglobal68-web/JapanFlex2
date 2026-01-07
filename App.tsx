@@ -54,7 +54,7 @@ const App: React.FC = () => {
                   Hơn 5,000 khách hàng đã tin tưởng
                 </h2>
                 <p className="text-slate-600 max-w-2xl mx-auto text-lg">
-                  Sự hài lòng của bạn là thước đo thành công lớn nhất của JapanFlex.
+                  Sự hài lòng của bạn là thước đo thành công lớn nhất của SigFlex Japan.
                 </p>
               </div>
 

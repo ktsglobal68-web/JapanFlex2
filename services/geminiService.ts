@@ -9,21 +9,35 @@ export const generateCustomItinerary = async (params: {
   interests: string;
 }): Promise<CustomItineraryResponse | null> => {
   try {
-    // Luôn khởi tạo instance mới để đảm bảo tính sẵn sàng của API Key
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      console.error("API_KEY is missing. Please check your environment variables.");
+      return null;
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
     
-    // Prompt tối ưu: Ngắn gọn, súc tích và tập trung vào dữ liệu
     const prompt = `Hãy lập lịch trình du lịch Nhật Bản chi tiết bằng tiếng Việt.
     Thông tin chuyến đi:
     - Thời gian: ${params.days} ngày
     - Phong cách: ${params.style}
     - Ngân sách: ${params.budget}
     - Yêu cầu đặc biệt: ${params.interests || "Không có"}
-    Yêu cầu: Trả về JSON chính xác theo cấu trúc itinerary, totalEstimatedCost, recommendations.`;
+    
+    Yêu cầu: Trả về một đối tượng JSON có cấu trúc chính xác như sau:
+    {
+      "itinerary": [
+        {"day": 1, "title": "...", "activities": ["...", "..."], "tips": "..."},
+        ...
+      ],
+      "totalEstimatedCost": "...",
+      "recommendations": ["...", "..."]
+    }`;
 
+    // Sử dụng cấu trúc contents đầy đủ để đảm bảo tính tương thích cao nhất trên môi trường production
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: prompt, // Sử dụng chuỗi trực tiếp cho độ ổn định cao nhất
+      contents: [{ parts: [{ text: prompt }] }],
       config: {
         systemInstruction: "Bạn là chuyên gia tư vấn lữ hành JapanFlex. Luôn phản hồi bằng JSON chuẩn, không bao gồm các ký tự đánh dấu markdown như ```json.",
         responseMimeType: "application/json",
@@ -58,12 +72,9 @@ export const generateCustomItinerary = async (params: {
     });
 
     const text = response.text;
-    if (!text) {
-      console.warn("AI returned empty text");
-      return null;
-    }
+    if (!text) throw new Error("AI returned empty text");
 
-    // Xử lý chuỗi JSON an toàn: loại bỏ bất kỳ ký tự rác nào nếu AI vô tình trả về
+    // Xử lý chuỗi JSON an toàn: loại bỏ bất kỳ ký tự rác nào nếu AI vô tình trả về markdown
     const startIdx = text.indexOf('{');
     const endIdx = text.lastIndexOf('}');
     if (startIdx === -1 || endIdx === -1) {
@@ -73,7 +84,38 @@ export const generateCustomItinerary = async (params: {
     
     return JSON.parse(cleanJson) as CustomItineraryResponse;
   } catch (error) {
-    console.error("Gemini Production Error:", error);
-    return null;
+    console.error("Gemini Production Error, attempting fallback:", error);
+    // Nếu lỗi do schema hoặc MIME type không hỗ trợ ở một số region, thử gọi lại bản dự phòng tối giản
+    try {
+      return await generateFallbackItinerary(params);
+    } catch (fallbackError) {
+      console.error("Fallback also failed:", fallbackError);
+      return null;
+    }
   }
 };
+
+/**
+ * Hàm dự phòng nếu cấu hình JSON nghiêm ngặt hoặc Schema gặp sự cố tại một số khu vực
+ */
+async function generateFallbackItinerary(params: any): Promise<CustomItineraryResponse | null> {
+  const apiKey = process.env.API_KEY || "";
+  if (!apiKey) return null;
+  
+  const ai = new GoogleGenAI({ apiKey });
+  const prompt = `Lập lịch trình du lịch Nhật Bản ${params.days} ngày cho phong cách ${params.style}. 
+  Trả về duy nhất dữ liệu JSON (không markdown) gồm itinerary (mảng object day, title, activities, tips), totalEstimatedCost (string), recommendations (mảng string).`;
+  
+  const response = await ai.models.generateContent({
+    model: "gemini-3-flash-preview",
+    contents: [{ parts: [{ text: prompt }] }]
+  });
+
+  const text = response.text || "";
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start !== -1 && end !== -1) {
+    return JSON.parse(text.substring(start, end + 1));
+  }
+  return null;
+}

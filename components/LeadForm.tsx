@@ -8,27 +8,18 @@ const LeadForm: React.FC = () => {
     fullName: '',
     phone: '',
     email: '',
-    note: ''
+    service: 'Tour Private',
+    note: '',
+    _gotcha: '' // Field để chặn spam bot
   });
 
-  /**
-   * ĐÃ KẾT NỐI FORMSPREE:
-   * Dữ liệu sẽ được gửi về email đăng ký với ID: mrebnbag
-   */
   const FORM_ENDPOINT = "https://formspree.io/f/mrebnbag"; 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (formData._gotcha) return; // Nếu bot điền vào trường này thì không gửi
 
-    // Nếu chưa dán link, thông báo cho người dùng (chỉ dùng trong lúc phát triển)
-    if (!FORM_ENDPOINT) {
-      console.log("Dữ liệu khách hàng (Giả lập):", formData);
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setSubmitted(true);
-      setLoading(false);
-      return;
-    }
+    setLoading(true);
 
     try {
       const response = await fetch(FORM_ENDPOINT, {
@@ -38,10 +29,13 @@ const LeadForm: React.FC = () => {
           'Accept': 'application/json' 
         },
         body: JSON.stringify({
-          ...formData,
-          _subject: `[JapanFlex] Khách hàng mới: ${formData.fullName}`,
-          _template: "table", // Formspree sẽ gửi email dạng bảng đẹp mắt
-          timestamp: new Date().toLocaleString('vi-VN')
+          "Họ tên": formData.fullName,
+          "Số điện thoại": formData.phone,
+          "Email": formData.email,
+          "Dịch vụ quan tâm": formData.service,
+          "Lời nhắn": formData.note,
+          "_subject": `[JapanFlex] Yêu cầu mới từ ${formData.fullName} - ${formData.service}`,
+          "_template": "table"
         })
       });
       
@@ -59,7 +53,7 @@ const LeadForm: React.FC = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -67,67 +61,76 @@ const LeadForm: React.FC = () => {
   };
 
   return (
-    <section id="lead" className="py-20 bg-white scroll-mt-20">
+    <section id="lead" className="py-24 bg-slate-50 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="bg-red-600 rounded-[3rem] overflow-hidden shadow-2xl flex flex-col lg:flex-row border border-red-500/20">
+        <div className="bg-white rounded-[4rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] flex flex-col lg:flex-row border border-slate-100">
           {/* Cột thông tin bên trái */}
-          <div className="p-12 lg:w-1/2 text-white flex flex-col justify-center bg-gradient-to-br from-red-600 to-red-700">
-            <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">Nhận Lịch Trình & Báo Giá Riêng Trong 24h</h2>
-            <p className="text-red-100 text-lg mb-8 leading-relaxed opacity-90">
-              Hãy để lại thông tin, JapanFlex sẽ thiết kế bản kế hoạch sơ bộ kèm dự toán chi phí chi tiết nhất gửi đến bạn.
-            </p>
-            <div className="space-y-5">
-              {[
-                "Tư vấn 1:1 hoàn toàn miễn phí",
-                "Checklist hồ sơ Visa chính xác 99%",
-                "Hỗ trợ qua Zalo 24/7 suốt chuyến đi"
-              ].map((item, i) => (
-                <div key={i} className="flex items-center space-x-3">
-                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+          <div className="p-12 lg:p-16 lg:w-5/12 text-white flex flex-col justify-center bg-kimono-red relative">
+            <div className="absolute inset-0 bg-black/20"></div>
+            <div className="relative z-10">
+              <span className="inline-block bg-yellow-400 text-red-900 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-6">Liên hệ ngay</span>
+              <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight font-luxury italic">Khởi đầu hành trình <br/>độc bản của bạn</h2>
+              <p className="text-red-50 text-lg mb-12 leading-relaxed opacity-90 font-light">
+                Chỉ mất 30 giây để gửi yêu cầu. Chuyên viên của JapanFlex sẽ phản hồi kèm bản thiết kế sơ bộ trong vòng 24h làm việc.
+              </p>
+              
+              <div className="space-y-6">
+                {[
+                  { title: "Tư vấn 1:1", desc: "Hoàn toàn miễn phí & tận tâm" },
+                  { title: "Báo giá minh bạch", desc: "Không phát sinh phụ phí ẩn" },
+                  { title: "Hỗ trợ 24/7", desc: "Đồng hành qua Zalo suốt chuyến đi" }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start space-x-4">
+                    <div className="w-10 h-10 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 border border-white/20">
+                      <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white">{item.title}</h4>
+                      <p className="text-red-100/70 text-sm">{item.desc}</p>
+                    </div>
                   </div>
-                  <span className="font-medium">{item}</span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Cột Form bên phải */}
-          <div className="p-12 lg:w-1/2 bg-white">
+          <div className="p-12 lg:p-16 lg:w-7/12 bg-white">
             {submitted ? (
-              <div className="h-full flex flex-col items-center justify-center text-center animate-in fade-in duration-700">
-                <div className="w-24 h-24 bg-green-50 text-green-500 rounded-full flex items-center justify-center text-5xl mb-6 shadow-inner">
+              <div className="h-full flex flex-col items-center justify-center text-center py-12">
+                <div className="w-24 h-24 bg-green-50 text-green-500 rounded-[2rem] flex items-center justify-center text-5xl mb-8 shadow-sm border border-green-100 animate-bounce">
                   <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
                 </div>
-                <h3 className="text-3xl font-bold text-slate-900 mb-3">Gửi thành công!</h3>
-                <p className="text-slate-500 text-lg">
-                  Chào <strong>{formData.fullName}</strong>, chuyên viên của JapanFlex sẽ liên hệ với bạn qua số <strong>{formData.phone}</strong> sớm nhất có thể.
+                <h3 className="text-4xl font-bold text-slate-900 mb-4 font-luxury">Cảm ơn {formData.fullName.split(' ').pop()}!</h3>
+                <p className="text-slate-500 text-lg max-w-md mx-auto leading-relaxed">
+                  Yêu cầu về dịch vụ <strong>{formData.service}</strong> của bạn đã được chuyển tới bộ phận tư vấn. Chúng tôi sẽ liên hệ lại qua số <strong>{formData.phone}</strong> sớm nhất.
                 </p>
                 <button 
                   onClick={() => setSubmitted(false)} 
-                  className="mt-8 text-red-600 font-bold hover:text-red-700 transition-colors flex items-center group"
+                  className="mt-10 bg-slate-900 text-white px-8 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all flex items-center space-x-2 shadow-lg"
                 >
-                  <span className="border-b-2 border-red-600">Gửi thêm yêu cầu khác</span>
-                  <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                  <span>Gửi thêm yêu cầu khác</span>
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">Họ và tên *</label>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <input type="text" name="_gotcha" style={{display:'none'}} onChange={handleChange} />
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Họ và tên *</label>
                     <input 
                       type="text" 
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleChange}
                       required 
-                      placeholder="Nguyễn Văn A"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none" 
+                      placeholder="Ví dụ: Nguyễn Minh Hoàng"
+                      className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none font-medium" 
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">Số điện thoại *</label>
+                  <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Số điện thoại *</label>
                     <input 
                       type="tel" 
                       name="phone"
@@ -135,41 +138,60 @@ const LeadForm: React.FC = () => {
                       onChange={handleChange}
                       required 
                       placeholder="09xx xxx xxx"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none" 
+                      className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none font-medium" 
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">Email nhận lịch trình *</label>
-                  <input 
-                    type="email" 
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required 
-                    placeholder="email@cua-ban.com"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none" 
-                  />
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Email nhận lịch trình *</label>
+                    <input 
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required 
+                      placeholder="email@cua-ban.com"
+                      className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none font-medium" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Dịch vụ quan tâm</label>
+                    <select 
+                      name="service"
+                      value={formData.service}
+                      onChange={handleChange}
+                      className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none font-bold text-slate-700 appearance-none cursor-pointer"
+                    >
+                      <option value="Tour Private">Tour Private (Xe riêng)</option>
+                      <option value="Visa Nhật Bản">Tư vấn Visa Nhật Bản</option>
+                      <option value="Tour Golf">Nghỉ dưỡng & Đánh Golf</option>
+                      <option value="Tầm soát sức khỏe">Du lịch & Tầm soát sức khỏe</option>
+                      <option value="Dịch vụ khác">Yêu cầu khác...</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5 ml-1">Mong muốn cụ thể (Số người, ngày đi...)</label>
+
+                <div className="space-y-2">
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Mong muốn cụ thể</label>
                   <textarea 
                     name="note"
                     value={formData.note}
                     onChange={handleChange}
                     rows={4} 
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all outline-none resize-none" 
-                    placeholder="Ví dụ: Gia đình 4 người, đi tháng 11, thích Kyoto và muốn ăn bò Kobe..."
+                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none resize-none font-medium" 
+                    placeholder="Ví dụ: Gia đình 4 người lớn, dự kiến đi tháng 12 ngắm tuyết, muốn ở khách sạn gần trung tâm..."
                   ></textarea>
                 </div>
                 
                 <button 
                   type="submit" 
                   disabled={loading}
-                  className={`w-full text-white py-5 rounded-2xl font-bold text-xl shadow-xl transition-all relative overflow-hidden group ${loading ? 'bg-slate-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 hover:shadow-red-500/30'}`}
+                  className={`w-full text-white py-5 rounded-[2rem] font-black text-xl shadow-2xl transition-all relative overflow-hidden group ${loading ? 'bg-slate-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 hover:shadow-red-500/40 hover:-translate-y-1'}`}
                 >
                   <span className={`flex items-center justify-center transition-all ${loading ? 'opacity-0' : 'opacity-100'}`}>
-                    Gửi yêu cầu & Nhận báo giá
+                    🚀 Gửi yêu cầu ngay
                   </span>
                   {loading && (
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -178,14 +200,9 @@ const LeadForm: React.FC = () => {
                   )}
                 </button>
                 
-                <div className="flex items-center justify-center space-x-3 text-xs text-slate-400 pt-2 font-medium">
-                  <div className="flex -space-x-1">
-                    <div className="w-5 h-5 rounded-full bg-slate-200 border border-white"></div>
-                    <div className="w-5 h-5 rounded-full bg-slate-300 border border-white"></div>
-                    <div className="w-5 h-5 rounded-full bg-slate-400 border border-white"></div>
-                  </div>
-                  <span>15 khách hàng vừa gửi yêu cầu trong hôm nay</span>
-                </div>
+                <p className="text-center text-[11px] text-slate-400 font-bold uppercase tracking-widest pt-2">
+                  🔒 Thông tin của bạn được bảo mật tuyệt đối theo tiêu chuẩn SSL
+                </p>
               </form>
             )}
           </div>

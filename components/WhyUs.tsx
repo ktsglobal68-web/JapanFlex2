@@ -56,7 +56,7 @@ const WhyUs: React.FC = () => {
     <section id="why" className="py-24 bg-white scroll-mt-20 overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="text-center mb-20">
-          <span className="text-red-600 font-bold tracking-[0.4em] uppercase text-xs mb-4 block">Difference in Detail</span>
+          <span className="text-red-600 font-bold tracking-[0.4em] uppercase text-xs mb-4 block">Khác Biệt Trong Từng Chi Tiết</span>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-luxury italic">Tại sao khách hàng chọn JapanFlex?</h2>
           <div className="w-24 h-1 bg-red-600 mx-auto rounded-full mb-6"></div>
           <p className="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">

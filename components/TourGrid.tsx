@@ -49,7 +49,7 @@ const TourGrid: React.FC = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-10">
           <div className="max-w-3xl">
-            <span className="text-red-600 font-bold tracking-[0.3em] uppercase text-sm mb-4 block">Tailor-made Journeys</span>
+            <span className="text-red-600 font-bold tracking-[0.3em] uppercase text-sm mb-4 block">Hành Trình Thiết Kế Riêng</span>
             <h2 className="text-5xl md:text-7xl font-bold text-slate-900 mb-8 font-luxury leading-tight">
               Các Loại Hình <br/>
               <span className="text-red-600">Tour Cao Cấp</span>
@@ -102,7 +102,7 @@ const TourGrid: React.FC = () => {
                   <div className="space-y-4">
                     <span className="inline-flex items-center space-x-2 text-red-600 font-black text-xs tracking-[0.3em] uppercase">
                       <span className="w-8 h-[2px] bg-red-600"></span>
-                      <span>Boutique Experience</span>
+                      <span>Trải Nghiệm Độc Bản</span>
                     </span>
                     <h3 className="text-4xl md:text-6xl font-bold text-slate-900 leading-[1.15] font-luxury">
                       {tour.title}

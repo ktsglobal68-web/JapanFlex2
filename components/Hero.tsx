@@ -5,9 +5,10 @@ import { CONTACT_INFO } from '../constants';
 const Hero: React.FC = () => {
   const scrollToSection = (e: React.MouseEvent, sectionId: string) => {
     e.preventDefault();
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    // Fix: Remove redundant declaration and undefined variable elementId
+    const targetElement = document.getElementById(sectionId);
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -82,7 +83,7 @@ const Hero: React.FC = () => {
             <p className="text-slate-800 font-bold text-xs leading-relaxed italic">
               "Xe riêng của JapanFlex thực sự chuyên nghiệp, gia đình mình rất hài lòng."
             </p>
-            <p className="text-slate-400 text-[9px] mt-2 uppercase tracking-widest font-extrabold">— Mr. David</p>
+            <p className="text-slate-400 text-[9px] mt-2 uppercase tracking-widest font-extrabold">— Anh Nguyễn Minh Hoàng</p>
           </div>
         </div>
       </div>

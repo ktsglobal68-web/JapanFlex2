@@ -2,8 +2,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { CustomItineraryResponse } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
-
 export const generateCustomItinerary = async (params: {
   days: number;
   budget: string;
@@ -11,6 +9,8 @@ export const generateCustomItinerary = async (params: {
   interests: string;
 }): Promise<CustomItineraryResponse | null> => {
   try {
+    // Fix: Create GoogleGenAI instance right before making an API call
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `Design a custom Japan travel itinerary for a ${params.days}-day trip. 

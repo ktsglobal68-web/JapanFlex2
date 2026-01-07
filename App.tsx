@@ -5,8 +5,10 @@ import Hero from './components/Hero';
 import AIPlanner from './components/AIPlanner';
 import TourGrid from './components/TourGrid';
 import WhyUs from './components/WhyUs';
+import Process from './components/Process';
 import LeadForm from './components/LeadForm';
 import Footer from './components/Footer';
+import FloatingContact from './components/FloatingContact';
 import { REVIEWS, CONTACT_INFO } from './constants';
 
 const App: React.FC = () => {
@@ -26,7 +28,6 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 selection:bg-red-100 selection:text-red-900 overflow-x-hidden relative">
-      {/* Background decoration - Simplified, removed heritage icons */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-500/5 rounded-full blur-[120px]"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-500/5 rounded-full blur-[120px]"></div>
@@ -40,6 +41,8 @@ const App: React.FC = () => {
           <WhyUs />
 
           <TourGrid />
+
+          <Process />
 
           <AIPlanner />
 
@@ -94,33 +97,10 @@ const App: React.FC = () => {
             </div>
           </section>
 
-          {/* Floating CTA for Mobile */}
-          <section className="py-8 bg-white/90 backdrop-blur-md border-t border-slate-100 md:hidden sticky bottom-0 z-30 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
-            <div className="max-w-7xl mx-auto px-4 text-center">
-              <div className="grid grid-cols-2 gap-3">
-                <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, '')}`} className="bg-red-600 text-white py-4 rounded-xl font-bold flex items-center justify-center shadow-lg">
-                  📞 Gọi ngay
-                </a>
-                <a 
-                  href={CONTACT_INFO.zalo} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="bg-[#0068FF] text-white py-4 rounded-xl font-bold flex items-center justify-center shadow-lg space-x-2"
-                >
-                  <img 
-                    src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" 
-                    alt="Zalo" 
-                    className="w-5 h-5 bg-white rounded-full p-0.5" 
-                  />
-                  <span>Chat Zalo</span>
-                </a>
-              </div>
-            </div>
-          </section>
-
           <LeadForm />
         </main>
         <Footer />
+        <FloatingContact />
       </div>
     </div>
   );

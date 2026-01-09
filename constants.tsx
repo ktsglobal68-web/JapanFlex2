@@ -2,10 +2,10 @@
 import { Tour, Review } from './types';
 
 export const CONTACT_INFO = {
-  phone: '0938 628 807',
+  phone: '0967 652 231',
   email: 'ktsglobal68@gmail.com',
   address: 'Tòa Sa1, KĐT Vinsmart City, Tây Mỗ, Nam Từ Liêm, Hà Nội',
-  zalo: 'https://zalo.me/0938628807'
+  zalo: 'https://zalo.me/0967652231'
 };
 
 export const TOURS: Tour[] = [

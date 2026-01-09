@@ -5,13 +5,19 @@ import { CONTACT_INFO } from '../constants';
 const Footer: React.FC = () => {
   const LogoSVG = () => (
     <svg viewBox="0 0 100 100" className="w-full h-full">
-      <circle cx="50" cy="50" r="48" fill="#991b1b" stroke="white" strokeWidth="1" />
-      <path d="M20 70 L50 25 L80 70 Z" fill="none" stroke="white" strokeWidth="1.5" strokeOpacity="0.5" />
-      <path d="M42 37 L50 45 L58 37 L50 25 Z" fill="white" />
-      <text x="50" y="62" fontFamily="serif" fontSize="32" fontWeight="900" fill="white" textAnchor="middle" style={{fontStyle: 'italic'}}>SFJ</text>
-      <circle cx="75" cy="45" r="2" fill="white" opacity="0.8" />
-      <circle cx="82" cy="55" r="1.5" fill="white" opacity="0.6" />
-      <circle cx="70" cy="75" r="2.5" fill="white" opacity="0.7" />
+      <circle cx="50" cy="50" r="48" fill="white" stroke="#991b1b" strokeWidth="2.5" />
+      <g transform="translate(50, 20) scale(0.12)" fill="#991b1b">
+        <path d="M0,-50 C10,-40 30,-30 30,-10 C30,10 10,20 0,10 C-10,20 -30,10 -30,-10 C-30,-30 -10,-40 0,-50 Z" transform="rotate(0)" />
+        <path d="M0,-50 C10,-40 30,-30 30,-10 C30,10 10,20 0,10 C-10,20 -30,10 -30,-10 C-30,-30 -10,-40 0,-50 Z" transform="rotate(72)" />
+        <path d="M0,-50 C10,-40 30,-30 30,-10 C30,10 10,20 0,10 C-10,20 -30,10 -30,-10 C-30,-30 -10,-40 0,-50 Z" transform="rotate(144)" />
+        <path d="M0,-50 C10,-40 30,-30 30,-10 C30,10 10,20 0,10 C-10,20 -30,10 -30,-10 C-30,-30 -10,-40 0,-50 Z" transform="rotate(216)" />
+        <path d="M0,-50 C10,-40 30,-30 30,-10 C30,10 10,20 0,10 C-10,20 -30,10 -30,-10 C-30,-30 -10,-40 0,-50 Z" transform="rotate(288)" />
+        <circle cx="0" cy="0" r="8" fill="white" />
+      </g>
+      <path d="M22 62 L50 35 L78 62 L22 62" fill="#991b1b" />
+      <path d="M42 42 L50 49 L58 42 L50 35 Z" fill="white" />
+      <text x="50" y="82" fontFamily="'Playfair Display', serif" fontSize="24" fontWeight="900" fill="#991b1b" textAnchor="middle" letterSpacing="-1">SFJ</text>
+      <line x1="25" y1="62" x2="75" y2="62" stroke="#991b1b" strokeWidth="1" />
     </svg>
   );
 
@@ -21,7 +27,7 @@ const Footer: React.FC = () => {
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           <div className="col-span-2">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center overflow-hidden border border-white/10">
+              <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center overflow-hidden border border-white/10">
                 <LogoSVG />
               </div>
               <div className="flex flex-col">

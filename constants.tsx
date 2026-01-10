@@ -2,10 +2,10 @@
 import { Tour, Review } from './types';
 
 export const CONTACT_INFO = {
-  phone: '0967 652 231',
+  phone: '0967.652.331',
   email: 'ktsglobal68@gmail.com',
   address: 'Tòa Sa1, KĐT Vinsmart City, Tây Mỗ, Nam Từ Liêm, Hà Nội',
-  zalo: 'https://zalo.me/0967652231'
+  zalo: 'https://zalo.me/0967652331'
 };
 
 export const TOURS: Tour[] = [
@@ -64,7 +64,7 @@ export const TOURS: Tour[] = [
     id: 'health-checkup',
     title: 'Du Lịch Kết Hợp Tầm Soát Sức Khỏe',
     image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=1200',
-    description: 'An tâm tận hưởng chuyến đi kết hợp kiểm tra sức khỏe tổng quát với công nghệ tầm soát tiên tiến nhất thế giới.',
+    description: 'An tâm tận hưởng chuyến đi kết hợp kiểm tra sức khỏe tổng quát with công nghệ tầm soát tiên tiến nhất thế giới.',
     highlights: [
       'Tầm soát ung thư sớm (Ningen Dock) tại bệnh viện lớn',
       'Phiên dịch viên y tế chuyên nghiệp đi kèm',

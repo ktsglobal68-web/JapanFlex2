@@ -51,7 +51,7 @@ const LeadForm: React.FC = () => {
       }
     } catch (error: any) {
       console.error("Formspree error:", error);
-      alert("❌ Lỗi: " + error.message + "\n\nBạn có thể liên hệ trực tiếp qua Zalo 0967.652.231 để được hỗ trợ nhanh nhất!");
+      alert("❌ Lỗi: " + error.message + "\n\nBạn có thể liên hệ trực tiếp qua Zalo 0967.652.331 để được hỗ trợ nhanh nhất!");
     } finally {
       setLoading(false);
     }

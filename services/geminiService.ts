@@ -9,49 +9,57 @@ export const generateCustomItinerary = async (params: {
   interests: string;
 }): Promise<CustomItineraryResponse | null> => {
   try {
+    // Khởi tạo instance AI với API Key từ môi trường
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
-    // Yêu cầu AI trả về JSON cực kỳ nghiêm ngặt
-    const prompt = `Hành động như một chuyên gia du lịch Nhật Bản cao cấp. Lập lịch trình ${params.days} ngày cho phong cách ${params.style}, ngân sách ${params.budget}. 
-Yêu cầu riêng: ${params.interests || "Không có"}.
-
-TRẢ VỀ DUY NHẤT JSON THEO CẤU TRÚC:
-{
-  "itinerary": [
-    {"day": 1, "title": "Tiêu đề", "activities": ["HĐ1", "HĐ2"], "tips": "Mẹo nhỏ"}
-  ],
-  "totalEstimatedCost": "Giá dự kiến",
-  "recommendations": ["Gợi ý"]
-}`;
-
+    // Sử dụng model gemini-3-flash-preview cho tốc độ phản hồi nhanh
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: prompt,
+      contents: `Lập lịch trình du lịch Nhật Bản chi tiết trong ${params.days} ngày. 
+        Phong cách: ${params.style}. 
+        Ngân sách: ${params.budget}. 
+        Yêu cầu đặc biệt: ${params.interests || "Không có"}.`,
       config: {
+        systemInstruction: "Bạn là một chuyên gia thiết kế tour du lịch Nhật Bản cao cấp cho khách hàng Việt Nam. Bạn luôn tư vấn những điểm đến tinh tế, tối ưu thời gian và đậm chất cá nhân hóa.",
         responseMimeType: "application/json",
-        temperature: 0.7, // Tăng độ sáng tạo nhưng vẫn giữ trong khuôn khổ JSON
+        // Định nghĩa Schema rõ ràng để đảm bảo AI trả về đúng cấu trúc dữ liệu
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            itinerary: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  day: { type: Type.NUMBER },
+                  title: { type: Type.STRING },
+                  activities: { 
+                    type: Type.ARRAY, 
+                    items: { type: Type.STRING } 
+                  },
+                  tips: { type: Type.STRING }
+                },
+                required: ["day", "title", "activities", "tips"]
+              }
+            },
+            totalEstimatedCost: { type: Type.STRING },
+            recommendations: { 
+              type: Type.ARRAY, 
+              items: { type: Type.STRING } 
+            }
+          },
+          required: ["itinerary", "totalEstimatedCost", "recommendations"]
+        }
       }
     });
 
-    const text = response.text?.trim();
-    if (!text) return null;
+    // Lấy văn bản trực tiếp từ property .text (không gọi hàm text())
+    const jsonStr = response.text;
+    if (!jsonStr) return null;
 
-    // Xử lý JSON linh hoạt hơn (loại bỏ markdown nếu AI lỡ tay thêm vào)
-    try {
-      const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
-      return JSON.parse(cleanText) as CustomItineraryResponse;
-    } catch (parseError) {
-      // Fallback: Tìm cặp dấu ngoặc nhọn đầu tiên và cuối cùng
-      const firstBrace = text.indexOf('{');
-      const lastBrace = text.lastIndexOf('}');
-      if (firstBrace !== -1 && lastBrace !== -1) {
-        const potentialJson = text.substring(firstBrace, lastBrace + 1);
-        return JSON.parse(potentialJson) as CustomItineraryResponse;
-      }
-      throw parseError;
-    }
+    return JSON.parse(jsonStr) as CustomItineraryResponse;
   } catch (error) {
-    console.error("Gemini Critical Error:", error);
+    console.error("Lỗi kết nối Gemini API:", error);
     return null;
   }
 };

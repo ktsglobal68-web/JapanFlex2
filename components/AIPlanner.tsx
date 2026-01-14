@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { generateCustomItinerary } from '../services/geminiService';
 import { CustomItineraryResponse } from '../types';
-// Fix: Import CONTACT_INFO which was missing but used in the component
 import { CONTACT_INFO } from '../constants';
 
 const AIPlanner: React.FC = () => {
@@ -27,11 +26,15 @@ const AIPlanner: React.FC = () => {
       if (itinerary) {
         setResult(itinerary);
       } else {
-        setErrorMsg("Hệ thống đang bận kiến tạo lịch trình cho nhiều khách hàng khác. Vui lòng thử lại sau vài giây.");
+        setErrorMsg("API đang gặp quá tải hoặc giới hạn vùng địa lý. Vui lòng thử lại sau 30 giây hoặc chat Zalo để chuyên gia tư vấn trực tiếp.");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Submit error:", err);
-      setErrorMsg("Kết nối bị gián đoạn. Vui lòng kiểm tra lại mạng.");
+      if (err.message === "API_KEY_MISSING") {
+        setErrorMsg("Hệ thống chưa được cấu hình API Key. Vui lòng liên hệ quản trị viên.");
+      } else {
+        setErrorMsg("Kết nối bị gián đoạn. Vui lòng kiểm tra lại mạng.");
+      }
     } finally {
       setLoading(false);
     }
@@ -93,9 +96,9 @@ const AIPlanner: React.FC = () => {
                 <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Phong cách du lịch</label>
                 <div className="grid grid-cols-3 gap-4">
                   {[
-                    { id: 'family', label: '👨‍👩‍👧‍👦 Gia đình', color: 'red' },
-                    { id: 'couple', label: '💍 Cặp đôi', color: 'red' },
-                    { id: 'solo', label: '🎒 Solo', color: 'red' }
+                    { id: 'family', label: '👨‍👩‍👧‍👦 Gia đình' },
+                    { id: 'couple', label: '💍 Cặp đôi' },
+                    { id: 'solo', label: '🎒 Solo' }
                   ].map(s => (
                     <button
                       key={s.id}
@@ -164,8 +167,8 @@ const AIPlanner: React.FC = () => {
                   <div className="w-5/6 h-4 bg-slate-700/50 rounded-full mx-auto"></div>
                 </div>
                 <div className="space-y-2 text-center">
-                   <p className="text-red-400 text-sm font-black uppercase tracking-widest">Đang kết nối Gemini 3 Flash</p>
-                   <p className="text-slate-500 text-xs font-medium italic">Vui lòng đợi trong khoảng 3-5 giây...</p>
+                   <p className="text-red-400 text-sm font-black uppercase tracking-widest">Đang kết nối Gemini AI</p>
+                   <p className="text-slate-500 text-xs font-medium italic">Quá trình này mất khoảng 5-10 giây...</p>
                 </div>
               </div>
             )}
@@ -226,9 +229,6 @@ const AIPlanner: React.FC = () => {
                     <span>🎯 Hiện thực hóa lịch trình này</span>
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                   </button>
-                  <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-4">
-                    Tư vấn miễn phí qua Hotline/Zalo {CONTACT_INFO.phone}
-                  </p>
                 </div>
               </div>
             )}

@@ -1,15 +1,18 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, Chat } from "@google/genai";
 import { CustomItineraryResponse } from "../types";
 
-/**
- * Hàm hỗ trợ dọn dẹp chuỗi JSON trả về từ AI
- * Loại bỏ các khối markdown ```json ... ``` nếu có
- */
-const cleanJsonString = (str: string): string => {
-  return str.replace(/```json/g, "").replace(/```/g, "").trim();
+// Helper để dọn dẹp chuỗi JSON từ AI
+const cleanJson = (str: string) => str.replace(/```json/g, "").replace(/```/g, "").trim();
+
+export const getAIClient = () => {
+  if (!process.env.API_KEY) {
+    throw new Error("API_KEY_MISSING");
+  }
+  return new GoogleGenAI({ apiKey: process.env.API_KEY });
 };
 
+// 1. Tác vụ Lên lịch trình chi tiết (Planner)
 export const generateCustomItinerary = async (params: {
   days: number;
   budget: string;
@@ -17,25 +20,16 @@ export const generateCustomItinerary = async (params: {
   interests: string;
 }): Promise<CustomItineraryResponse | null> => {
   try {
-    // Kiểm tra API Key (chỉ log trạng thái, không log giá trị key vì bảo mật)
-    if (!process.env.API_KEY) {
-      console.error("LỖI: API_KEY chưa được thiết lập trong biến môi trường.");
-      return null;
-    }
-
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-    
-    console.log("Đang gửi yêu cầu thiết kế lịch trình đến Gemini 3 Flash...");
-
+    const ai = getAIClient();
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `Hãy thiết kế một hành trình du lịch Nhật Bản chi tiết. 
         Số ngày: ${params.days} ngày. 
-        Ngân sách: ${params.budget === 'high' ? 'Cao cấp (Luxury)' : params.budget === 'mid' ? 'Tiêu chuẩn (Comfort)' : 'Tiết kiệm (Signature)'}. 
-        Đối tượng: ${params.style === 'family' ? 'Gia đình có trẻ nhỏ/người già' : params.style === 'couple' ? 'Cặp đôi/Trăng mật' : 'Khách đi một mình (Solo)'}. 
-        Yêu cầu đặc biệt: ${params.interests || "Khám phá các điểm đến tinh tế, ẩm thực bản địa và tối ưu thời gian di chuyển"}.`,
+        Ngân sách: ${params.budget}. 
+        Phong cách: ${params.style}. 
+        Yêu cầu: ${params.interests || "Khám phá tinh hoa bản địa"}.`,
       config: {
-        systemInstruction: "Bạn là chuyên gia thiết kế tour Nhật Bản cấp cao. Luôn trả về dữ liệu thuần JSON theo đúng Schema được cung cấp. Không thêm văn bản giải thích ngoài JSON.",
+        systemInstruction: "Bạn là chuyên gia thiết kế tour cao cấp của SigFlex Japan. Luôn trả về JSON theo Schema. Ngôn ngữ: Tiếng Việt.",
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
@@ -45,47 +39,44 @@ export const generateCustomItinerary = async (params: {
               items: {
                 type: Type.OBJECT,
                 properties: {
-                  day: { type: Type.INTEGER, description: "Số thứ tự ngày" },
-                  title: { type: Type.STRING, description: "Tiêu đề chính của ngày hôm đó" },
-                  activities: { 
-                    type: Type.ARRAY, 
-                    items: { type: Type.STRING },
-                    description: "Danh sách 3-4 hoạt động chính"
-                  },
-                  tips: { type: Type.STRING, description: "Lưu ý quan trọng cho ngày này" }
+                  day: { type: Type.NUMBER },
+                  title: { type: Type.STRING },
+                  activities: { type: Type.ARRAY, items: { type: Type.STRING } },
+                  tips: { type: Type.STRING }
                 },
                 required: ["day", "title", "activities", "tips"]
               }
             },
-            totalEstimatedCost: { type: Type.STRING, description: "Ước tính tổng chi phí theo VNĐ hoặc USD" },
-            recommendations: { 
-              type: Type.ARRAY, 
-              items: { type: Type.STRING },
-              description: "3 lời khuyên từ chuyên gia cho toàn bộ chuyến đi"
-            }
+            totalEstimatedCost: { type: Type.STRING },
+            recommendations: { type: Type.ARRAY, items: { type: Type.STRING } }
           },
           required: ["itinerary", "totalEstimatedCost", "recommendations"]
         }
       }
     });
 
-    const rawText = response.text;
-    if (!rawText) {
-      console.error("LỖI: Gemini trả về phản hồi rỗng.");
-      return null;
-    }
-
-    const cleanedJson = cleanJsonString(rawText);
-    console.log("Dữ liệu AI trả về thành công, đang tiến hành xử lý...");
-    
-    return JSON.parse(cleanedJson) as CustomItineraryResponse;
+    const text = response.text;
+    if (!text) return null;
+    return JSON.parse(cleanJson(text)) as CustomItineraryResponse;
   } catch (error: any) {
-    // Log chi tiết lỗi để bạn có thể kiểm tra trong F12 Console của trình duyệt
-    console.error("--- LỖI KẾT NỐI GEMINI AI ---");
-    console.error("Thông điệp lỗi:", error?.message || error);
-    if (error?.message?.includes("API key not valid")) {
-      console.error("Gợi ý: API Key của bạn có vẻ không hợp lệ hoặc đã hết hạn.");
-    }
+    console.error("Gemini Planner Error:", error);
+    if (error.message === "API_KEY_MISSING") throw new Error("Chưa cấu hình API Key");
     return null;
   }
+};
+
+// 2. Tác vụ Tư vấn khách hàng (Chatbot)
+export const createConsultantChat = (): Chat => {
+  const ai = getAIClient();
+  return ai.chats.create({
+    model: "gemini-3-flash-preview",
+    config: {
+      systemInstruction: `Bạn là 'Trợ lý SigFlex AI' - chuyên gia tư vấn du lịch Nhật Bản cao cấp. 
+      Nhiệm vụ: 
+      1. Tư vấn lịch trình theo mục đích (Golf, chữa lành, shopping, visa).
+      2. Trả lời lịch sự, tinh tế, đẳng cấp. 
+      3. Luôn khuyến khích khách hàng liên hệ Zalo 0967.652.331 nếu cần hỗ trợ xe riêng/visa gấp.
+      4. Ngôn ngữ: Tiếng Việt ấm áp, chuyên nghiệp.`
+    }
+  });
 };

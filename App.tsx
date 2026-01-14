@@ -9,21 +9,14 @@ import Process from './components/Process';
 import LeadForm from './components/LeadForm';
 import Footer from './components/Footer';
 import FloatingContact from './components/FloatingContact';
-import { REVIEWS, CONTACT_INFO } from './constants';
+import AIConsultant from './components/AIConsultant';
+import { REVIEWS } from './constants';
 
 const App: React.FC = () => {
   const [visibleReviews, setVisibleReviews] = useState(6);
 
   const showMoreReviews = () => {
     setVisibleReviews(prev => Math.min(prev + 9, REVIEWS.length));
-  };
-
-  const scrollToLead = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const element = document.getElementById('lead');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   return (
@@ -101,6 +94,7 @@ const App: React.FC = () => {
         </main>
         <Footer />
         <FloatingContact />
+        <AIConsultant />
       </div>
     </div>
   );

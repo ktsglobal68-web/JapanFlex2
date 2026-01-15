@@ -1,5 +1,5 @@
 
-import { GoogleGenAI, Type, Chat } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { CustomItineraryResponse } from "../types";
 
 /**
@@ -85,24 +85,13 @@ export const generateCustomItinerary = async (params: {
   }
 };
 
-// 2. Tác vụ Tư vấn khách hàng (Chatbot)
-export const createConsultantChat = (): Chat => {
+// 2. Khởi tạo phiên Chat cho Chatbot tư vấn (Sử dụng model Pro để có chất lượng hội thoại tốt nhất)
+export const createConsultantChat = () => {
   const ai = getAIClient();
   return ai.chats.create({
-    model: "gemini-3-flash-preview",
+    model: 'gemini-3-pro-preview',
     config: {
-      systemInstruction: `Bạn là 'Trợ lý SigFlex AI' - chuyên gia du lịch Nhật Bản. 
-      Ngôn ngữ: Tiếng Việt chuyên nghiệp, tinh tế.
-      Nhiệm vụ:
-      1. Lắng nghe nhu cầu du lịch (mục đích, sở thích, ngân sách).
-      2. Đề xuất các giải pháp tour (Golf, Visa, Xe riêng, Tầm soát sức khỏe).
-      3. Khuyến khích khách liên hệ Zalo ${CONTACT_INFO_PLACEHOLDER} để nhận báo giá chi tiết.
-      Lưu ý: Không tự ý bịa đặt thông tin nếu không chắc chắn.`,
-      temperature: 0.7,
-      topK: 40
-    }
+      systemInstruction: 'Bạn là chuyên gia tư vấn du lịch Nhật Bản của SigFlex Japan. Hãy trả lời thân thiện, chuyên nghiệp và hữu ích bằng Tiếng Việt. Tập trung vào việc tư vấn tour private, visa, xe riêng và các trải nghiệm đặc sắc tại Nhật.',
+    },
   });
 };
-
-// Hỗ trợ truyền thông tin liên hệ vào systemInstruction
-const CONTACT_INFO_PLACEHOLDER = '0967.652.331';

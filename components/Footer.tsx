@@ -39,9 +39,10 @@ const Footer: React.FC = () => {
               Nền tảng tiên phong kiến tạo hành trình Nhật Bản độc bản (Signature) với dịch vụ xe riêng linh hoạt (Flexibility) và tận tâm nhất.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-all">FB</a>
-              <a href="#" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-all">IG</a>
-              <a href="#" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-all">YT</a>
+              <a href={CONTACT_INFO.social.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-all font-bold text-xs" title="Facebook">FB</a>
+              <a href={CONTACT_INFO.social.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-all font-bold text-xs" title="Instagram">IG</a>
+              <a href={CONTACT_INFO.social.youtube} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-all font-bold text-xs" title="YouTube">YT</a>
+              <a href={CONTACT_INFO.social.tiktok} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-all font-bold text-xs" title="TikTok">TT</a>
             </div>
           </div>
 
@@ -81,8 +82,8 @@ const Footer: React.FC = () => {
         <div className="pt-12 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500 space-y-4 md:space-y-0">
           <p>© 2026 SigFlex Japan. All rights reserved.</p>
           <div className="flex space-x-8">
-            <a href="#" className="hover:text-white">Chính sách bảo mật</a>
-            <a href="#" className="hover:text-white">Điều khoản sử dụng</a>
+            <a href="#" className="hover:text-white transition-colors">Chính sách bảo mật</a>
+            <a href="#" className="hover:text-white transition-colors">Điều khoản sử dụng</a>
           </div>
         </div>
       </div>

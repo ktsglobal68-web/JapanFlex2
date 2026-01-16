@@ -28,11 +28,8 @@ const App: React.FC = () => {
         <Header />
         <main>
           <Hero />
-          
           <WhyUs />
-
           <TourGrid />
-
           <Process />
 
           {/* Reviews Section */}

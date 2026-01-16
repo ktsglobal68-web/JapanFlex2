@@ -2,87 +2,68 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { CustomItineraryResponse } from "../types";
 
-/**
- * SigFlex Japan - AI Service Implementation
- * Provides functions for generating custom itineraries and chatbot consultations using Gemini API.
- */
+// Fix: Initialize GoogleGenAI using the recommended pattern and environment variable
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-// Fix: Implement generateCustomItinerary for AI Planner to design personalized Japan tours
+// Fix: Updated generateCustomItinerary to accept formData and return structured JSON using gemini-3-pro-preview
 export const generateCustomItinerary = async (formData: {
   days: number;
   budget: string;
   style: string;
   interests: string;
 }): Promise<CustomItineraryResponse | null> => {
-  // Always initialize right before making an API call to use the latest API key from environment
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
-  const prompt = `Thiết kế lịch trình du lịch Nhật Bản chi tiết dựa trên các yêu cầu sau:
-    - Thời gian: ${formData.days} ngày
-    - Ngân sách: ${formData.budget}
-    - Phong cách du lịch: ${formData.style}
-    - Sở thích/Yêu cầu đặc biệt: ${formData.interests}
-    
-    Phản hồi bằng tiếng Việt và tuân thủ định dạng JSON được cung cấp.`;
-
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-pro-preview',
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.OBJECT,
-        properties: {
-          itinerary: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.OBJECT,
-              properties: {
-                day: { type: Type.INTEGER },
-                title: { type: Type.STRING },
-                activities: {
-                  type: Type.ARRAY,
-                  items: { type: Type.STRING }
-                },
-                tips: { type: Type.STRING }
-              },
-              required: ["day", "title", "activities", "tips"]
-            }
-          },
-          totalEstimatedCost: { type: Type.STRING },
-          recommendations: {
-            type: Type.ARRAY,
-            items: { type: Type.STRING }
-          }
-        },
-        required: ["itinerary", "totalEstimatedCost", "recommendations"]
-      }
-    }
-  });
+  const prompt = `Hãy thiết kế một lịch trình du lịch Nhật Bản chi tiết trong ${formData.days} ngày. 
+    Mức ngân sách: ${formData.budget}. 
+    Phong cách du lịch: ${formData.style}. 
+    Sở thích/Yêu cầu cụ thể: ${formData.interests}. 
+    Câu trả lời phải bằng tiếng Việt.`;
 
   try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-3-pro-preview',
+      contents: prompt,
+      config: {
+        systemInstruction: "Bạn là chuyên gia tư vấn du lịch Nhật Bản cao cấp tại SigFlex Japan. Hãy tạo lịch trình mang tính cá nhân hóa cao (Signature) và linh hoạt (Flexibility).",
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            itinerary: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  day: { type: Type.INTEGER },
+                  title: { type: Type.STRING },
+                  activities: { type: Type.ARRAY, items: { type: Type.STRING } },
+                  tips: { type: Type.STRING },
+                },
+                required: ["day", "title", "activities", "tips"],
+              },
+            },
+            totalEstimatedCost: { type: Type.STRING },
+            recommendations: { type: Type.ARRAY, items: { type: Type.STRING } },
+          },
+          required: ["itinerary", "totalEstimatedCost", "recommendations"],
+        },
+      },
+    });
+
     const text = response.text;
     if (!text) return null;
-    return JSON.parse(text.trim()) as CustomItineraryResponse;
-  } catch (err) {
-    console.error("Error parsing itinerary JSON from Gemini:", err);
-    return null;
+    return JSON.parse(text.trim());
+  } catch (error) {
+    console.error("Gemini Itinerary Generation Error:", error);
+    throw error;
   }
 };
 
-// Fix: Implement createConsultantChat for the AI Chatbot Assistant session
+// Fix: Implemented createConsultantChat to return a Gemini chat session for AI interaction
 export const createConsultantChat = () => {
-  // Always initialize right before starting a chat session to use the latest API key
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
   return ai.chats.create({
     model: 'gemini-3-flash-preview',
     config: {
-      systemInstruction: `Bạn là SigFlex AI Expert, trợ lý tư vấn du lịch cao cấp của SigFlex Japan. 
-      SigFlex Japan chuyên về tour Private (xe riêng) hoàn toàn linh hoạt (Flexibility) và độc bản (Signature).
-      Dịch vụ chính bao gồm: Tour Cung Đường Vàng, Tour Golf, Tour Ẩm Thực Kobe, và Du lịch tầm soát sức khỏe.
-      Thông tin liên hệ: 0967.652.331 hoặc Zalo https://zalo.me/0967652331.
-      Vui lòng trả lời bằng tiếng Việt, phong cách chuyên nghiệp, sang trọng và tận tâm.`,
+      systemInstruction: 'Bạn là chuyên gia tư vấn du lịch của SigFlex Japan. Hãy trả lời các câu hỏi của khách hàng về du lịch Nhật Bản, visa, xe riêng, và các dịch vụ của SigFlex Japan một cách chuyên nghiệp, tận tâm bằng tiếng Việt. Nếu không biết chắc chắn, hãy khuyên khách hàng liên hệ hotline/Zalo 0967.652.331.',
     },
   });
 };

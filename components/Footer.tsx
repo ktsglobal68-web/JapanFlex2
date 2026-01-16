@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
               </div>
             </div>
             <p className="text-slate-400 max-w-sm mb-6">
-              Nền tảng tiên phong kiến tạo hành trình Nhật Bản độc bản (Signature) với sự hỗ trợ của công nghệ AI và dịch vụ xe riêng linh hoạt (Flexibility).
+              Nền tảng tiên phong kiến tạo hành trình Nhật Bản độc bản (Signature) với dịch vụ xe riêng linh hoạt (Flexibility) và tận tâm nhất.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center hover:bg-red-600 transition-all">FB</a>
@@ -57,10 +57,23 @@ const Footer: React.FC = () => {
 
           <div>
             <h4 className="font-bold mb-6 uppercase text-xs tracking-widest text-slate-500">Liên hệ</h4>
-            <ul className="space-y-4 text-slate-400">
-              <li>Hotline: <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, '')}`} className="hover:text-white transition-colors">{CONTACT_INFO.phone}</a></li>
-              <li>Email: <a href={`mailto:${CONTACT_INFO.email}`} className="hover:text-white transition-colors">{CONTACT_INFO.email}</a></li>
-              <li>Địa chỉ: {CONTACT_INFO.address}</li>
+            <ul className="space-y-4 text-slate-400 text-sm">
+              <li>
+                <span className="block text-slate-500 uppercase text-[10px] font-black tracking-widest mb-1">Hotline tư vấn</span>
+                <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, '')}`} className="hover:text-white transition-colors font-bold text-lg">{CONTACT_INFO.phone}</a>
+              </li>
+              <li>
+                <span className="block text-slate-500 uppercase text-[10px] font-black tracking-widest mb-1">Văn phòng Nhật Bản</span>
+                <span className="text-slate-300">{CONTACT_INFO.addressJapan}</span>
+              </li>
+              <li>
+                <span className="block text-slate-500 uppercase text-[10px] font-black tracking-widest mb-1">Văn phòng Việt Nam</span>
+                <span className="text-slate-300">{CONTACT_INFO.addressVietnam}</span>
+              </li>
+              <li>
+                <span className="block text-slate-500 uppercase text-[10px] font-black tracking-widest mb-1">Email</span>
+                <a href={`mailto:${CONTACT_INFO.email}`} className="hover:text-white transition-colors">{CONTACT_INFO.email}</a>
+              </li>
             </ul>
           </div>
         </div>

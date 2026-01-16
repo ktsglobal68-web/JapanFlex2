@@ -4,7 +4,8 @@ import { Tour, Review } from './types';
 export const CONTACT_INFO = {
   phone: '0967.652.331',
   email: 'ktsglobal68@gmail.com',
-  address: 'Tòa Sa1, KĐT Vinsmart City, Tây Mỗ, Nam Từ Liêm, Hà Nội',
+  addressJapan: 'Hyogo-ken, Kobe-sh, Japan',
+  addressVietnam: 'Tây Mỗ, Hanoi, Vietnam',
   zalo: 'https://zalo.me/0967652331'
 };
 
@@ -64,7 +65,7 @@ export const TOURS: Tour[] = [
     id: 'health-checkup',
     title: 'Du Lịch Kết Hợp Tầm Soát Sức Khỏe',
     image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=1200',
-    description: 'An tâm tận hưởng chuyến đi kết hợp kiểm tra sức khỏe tổng quát with công nghệ tầm soát tiên tiến nhất thế giới.',
+    description: 'An tâm tận hưởng chuyến đi kết hợp kiểm tra sức khỏe tổng quát với công nghệ tầm soát tiên tiến nhất thế giới.',
     highlights: [
       'Tầm soát ung thư sớm (Ningen Dock) tại bệnh viện lớn',
       'Phiên dịch viên y tế chuyên nghiệp đi kèm',
@@ -90,7 +91,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Trần Thanh Tuấn',
     location: 'TP.HCM',
-    text: 'AI Planner gợi ý lịch trình rất sát with thực tế. Tôi đã đi theo và tiết kiệm được rất nhiều thời gian di chuyển.',
+    text: 'Lịch trình rất sát với thực tế. Tôi đã đi theo và tiết kiệm được rất nhiều thời gian di chuyển.',
     avatar: 'https://i.pravatar.cc/150?u=2',
     rating: 5
   },
@@ -139,7 +140,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Ngô Mỹ Linh',
     location: 'Vũng Tàu',
-    text: 'Phần mềm AI của các bạn thực sự thông minh. Nó tự động né các khung giờ cao điểm tại các điểm tham quan.',
+    text: 'Hệ thống vận hành của các bạn thực sự chuyên nghiệp. Nó tự động né các khung giờ cao điểm tại các điểm tham quan.',
     avatar: 'https://i.pravatar.cc/150?u=9',
     rating: 5
   },
@@ -244,7 +245,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Phạm Duy Thuận',
     location: 'Cần Thơ',
-    text: 'Hệ thống AI làm việc rất hiệu quả, giúp tôi tối ưu được ngân sách cho chuyến đi 10 ngày.',
+    text: 'Hệ thống làm việc rất hiệu quả, giúp tôi tối ưu được ngân sách cho chuyến đi 10 ngày.',
     avatar: 'https://i.pravatar.cc/150?u=24',
     rating: 5
   },
@@ -272,7 +273,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Phạm Hoàng Khoa',
     location: 'TP.HCM',
-    text: 'Dịch vụ cao cấp, xứng đáng with số tiền bỏ ra. Private tour là sự lựa chọn đúng đắn.',
+    text: 'Dịch vụ cao cấp, xứng đáng với số tiền bỏ ra. Private tour là sự lựa chọn đúng đắn.',
     avatar: 'https://i.pravatar.cc/150?u=28',
     rating: 5
   },
@@ -314,7 +315,7 @@ export const REVIEWS: Review[] = [
   {
     name: 'Nguyễn Kim Lý',
     location: 'TP.HCM',
-    text: 'Đội ngũ hỗ trợ rất nhiệt tình. AI planner giúp chúng tôi tiết kiệm nhiều thời gian trong chuyến đi đầu tiên.',
+    text: 'Đội ngũ hỗ trợ rất nhiệt tình. Tư vấn chuyên sâu giúp chúng tôi tiết kiệm nhiều thời gian trong chuyến đi đầu tiên.',
     avatar: 'https://i.pravatar.cc/150?u=34',
     rating: 5
   },

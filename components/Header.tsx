@@ -23,13 +23,9 @@ const Header: React.FC = () => {
     }
   };
 
-  // Tái tạo chính xác Logo mới từ hình ảnh khách hàng gửi
   const LogoSVG = () => (
     <svg viewBox="0 0 100 100" className="w-full h-full">
-      {/* Nền trắng và viền đỏ */}
       <circle cx="50" cy="50" r="48" fill="white" stroke="#991b1b" strokeWidth="2.5" />
-      
-      {/* Hoa anh đào ở trên đỉnh */}
       <g transform="translate(50, 20) scale(0.12)" fill="#991b1b">
         <path d="M0,-50 C10,-40 30,-30 30,-10 C30,10 10,20 0,10 C-10,20 -30,10 -30,-10 C-30,-30 -10,-40 0,-50 Z" transform="rotate(0)" />
         <path d="M0,-50 C10,-40 30,-30 30,-10 C30,10 10,20 0,10 C-10,20 -30,10 -30,-10 C-30,-30 -10,-40 0,-50 Z" transform="rotate(72)" />
@@ -38,15 +34,9 @@ const Header: React.FC = () => {
         <path d="M0,-50 C10,-40 30,-30 30,-10 C30,10 10,20 0,10 C-10,20 -30,10 -30,-10 C-30,-30 -10,-40 0,-50 Z" transform="rotate(288)" />
         <circle cx="0" cy="0" r="8" fill="white" />
       </g>
-
-      {/* Núi Phú Sĩ ở giữa */}
       <path d="M22 62 L50 35 L78 62 L22 62" fill="#991b1b" />
-      <path d="M42 42 L50 49 L58 42 L50 35 Z" fill="white" /> {/* Tuyết đỉnh núi */}
-
-      {/* Chữ SFJ ở dưới cùng */}
+      <path d="M42 42 L50 49 L58 42 L50 35 Z" fill="white" />
       <text x="50" y="82" fontFamily="'Playfair Display', serif" fontSize="24" fontWeight="900" fill="#991b1b" textAnchor="middle" letterSpacing="-1">SFJ</text>
-      
-      {/* Đường gạch ngang trang trí tinh tế */}
       <line x1="25" y1="62" x2="75" y2="62" stroke="#991b1b" strokeWidth="1" />
     </svg>
   );
@@ -72,7 +62,6 @@ const Header: React.FC = () => {
         <nav className={`hidden md:flex items-center space-x-8 text-sm font-bold transition-colors ${scrolled ? 'text-slate-600' : 'text-white/80'}`}>
           <button onClick={(e) => scrollToSection(e, 'why')} className="hover:text-yellow-400 transition-colors cursor-pointer">Vì sao</button>
           <button onClick={(e) => scrollToSection(e, 'tours')} className="hover:text-yellow-400 transition-colors cursor-pointer">Tour nổi bật</button>
-          <button onClick={(e) => scrollToSection(e, 'ai-planner')} className="hover:text-yellow-400 transition-colors cursor-pointer">AI Planner</button>
           <button onClick={(e) => scrollToSection(e, 'reviews')} className="hover:text-yellow-400 transition-colors cursor-pointer">Đánh giá</button>
         </nav>
 
@@ -108,7 +97,7 @@ const Header: React.FC = () => {
         <div className="md:hidden bg-white border-t border-slate-100 p-6 space-y-4 shadow-xl">
           <button onClick={(e) => scrollToSection(e, 'why')} className="block w-full text-left text-slate-700 font-bold py-2">Vì sao chọn</button>
           <button onClick={(e) => scrollToSection(e, 'tours')} className="block w-full text-left text-slate-700 font-bold py-2">Tour nổi bật</button>
-          <button onClick={(e) => scrollToSection(e, 'ai-planner')} className="block w-full text-left text-slate-700 font-bold py-2">AI Planner</button>
+          <button onClick={(e) => scrollToSection(e, 'reviews')} className="block w-full text-left text-slate-700 font-bold py-2">Đánh giá</button>
           <div className="py-4 border-t border-slate-100 space-y-4">
             <a 
               href={`tel:${CONTACT_INFO.phone.replace(/\s/g, '')}`} 

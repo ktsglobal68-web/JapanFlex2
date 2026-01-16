@@ -3,95 +3,86 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { CustomItineraryResponse } from "../types";
 
 /**
- * Hàm hỗ trợ dọn dẹp và trích xuất JSON từ phản hồi của AI
+ * SigFlex Japan - AI Service Implementation
+ * Provides functions for generating custom itineraries and chatbot consultations using Gemini API.
  */
-const extractJson = (text: string): any => {
-  try {
-    // Tìm vị trí của dấu ngoặc nhọn đầu tiên và cuối cùng
-    const start = text.indexOf('{');
-    const end = text.lastIndexOf('}');
-    if (start === -1 || end === -1) return null;
-    
-    const jsonStr = text.substring(start, end + 1);
-    return JSON.parse(jsonStr);
-  } catch (e) {
-    console.error("Lỗi parse JSON từ AI:", e);
-    return null;
-  }
-};
 
-export const getAIClient = () => {
-  if (!process.env.API_KEY) {
-    console.warn("CẢNH BÁO: API_KEY không tìm thấy trong môi trường.");
-    throw new Error("API_KEY_MISSING");
-  }
-  return new GoogleGenAI({ apiKey: process.env.API_KEY });
-};
-
-// 1. Tác vụ Lên lịch trình (Sử dụng model Pro cho độ chính xác cao)
-export const generateCustomItinerary = async (params: {
+// Fix: Implement generateCustomItinerary for AI Planner to design personalized Japan tours
+export const generateCustomItinerary = async (formData: {
   days: number;
   budget: string;
   style: string;
   interests: string;
 }): Promise<CustomItineraryResponse | null> => {
-  try {
-    const ai = getAIClient();
-    console.log("Đang khởi tạo lịch trình với Gemini 3 Pro...");
+  // Always initialize right before making an API call to use the latest API key from environment
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
+  const prompt = `Thiết kế lịch trình du lịch Nhật Bản chi tiết dựa trên các yêu cầu sau:
+    - Thời gian: ${formData.days} ngày
+    - Ngân sách: ${formData.budget}
+    - Phong cách du lịch: ${formData.style}
+    - Sở thích/Yêu cầu đặc biệt: ${formData.interests}
     
-    const response = await ai.models.generateContent({
-      model: "gemini-3-pro-preview",
-      contents: `Hãy thiết kế một hành trình du lịch Nhật Bản chi tiết theo yêu cầu sau:
-        - Số ngày: ${params.days} ngày.
-        - Ngân sách: ${params.budget}.
-        - Đối tượng: ${params.style}.
-        - Mong muốn đặc biệt: ${params.interests || "Trải nghiệm văn hóa và ẩm thực địa phương"}.`,
-      config: {
-        systemInstruction: "Bạn là chuyên gia tư vấn tour Nhật Bản. Trả về dữ liệu thuần JSON, không bao gồm văn bản dẫn nhập. Ngôn ngữ: Tiếng Việt.",
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            itinerary: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  day: { type: Type.NUMBER },
-                  title: { type: Type.STRING },
-                  activities: { type: Type.ARRAY, items: { type: Type.STRING } },
-                  tips: { type: Type.STRING }
-                },
-                required: ["day", "title", "activities", "tips"]
-              }
-            },
-            totalEstimatedCost: { type: Type.STRING },
-            recommendations: { type: Type.ARRAY, items: { type: Type.STRING } }
-          },
-          required: ["itinerary", "totalEstimatedCost", "recommendations"]
-        }
-      }
-    });
+    Phản hồi bằng tiếng Việt và tuân thủ định dạng JSON được cung cấp.`;
 
-    const result = extractJson(response.text);
-    if (!result) {
-      console.error("AI không trả về đúng định dạng JSON mong muốn.");
-      return null;
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-pro-preview',
+    contents: prompt,
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          itinerary: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                day: { type: Type.INTEGER },
+                title: { type: Type.STRING },
+                activities: {
+                  type: Type.ARRAY,
+                  items: { type: Type.STRING }
+                },
+                tips: { type: Type.STRING }
+              },
+              required: ["day", "title", "activities", "tips"]
+            }
+          },
+          totalEstimatedCost: { type: Type.STRING },
+          recommendations: {
+            type: Type.ARRAY,
+            items: { type: Type.STRING }
+          }
+        },
+        required: ["itinerary", "totalEstimatedCost", "recommendations"]
+      }
     }
-    return result as CustomItineraryResponse;
-  } catch (error: any) {
-    console.error("Lỗi Planner AI:", error);
-    throw error;
+  });
+
+  try {
+    const text = response.text;
+    if (!text) return null;
+    return JSON.parse(text.trim()) as CustomItineraryResponse;
+  } catch (err) {
+    console.error("Error parsing itinerary JSON from Gemini:", err);
+    return null;
   }
 };
 
-// 2. Khởi tạo phiên Chat cho Chatbot tư vấn (Sử dụng model Pro để có chất lượng hội thoại tốt nhất)
+// Fix: Implement createConsultantChat for the AI Chatbot Assistant session
 export const createConsultantChat = () => {
-  const ai = getAIClient();
+  // Always initialize right before starting a chat session to use the latest API key
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
   return ai.chats.create({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-3-flash-preview',
     config: {
-      systemInstruction: 'Bạn là chuyên gia tư vấn du lịch Nhật Bản của SigFlex Japan. Hãy trả lời thân thiện, chuyên nghiệp và hữu ích bằng Tiếng Việt. Tập trung vào việc tư vấn tour private, visa, xe riêng và các trải nghiệm đặc sắc tại Nhật.',
+      systemInstruction: `Bạn là SigFlex AI Expert, trợ lý tư vấn du lịch cao cấp của SigFlex Japan. 
+      SigFlex Japan chuyên về tour Private (xe riêng) hoàn toàn linh hoạt (Flexibility) và độc bản (Signature).
+      Dịch vụ chính bao gồm: Tour Cung Đường Vàng, Tour Golf, Tour Ẩm Thực Kobe, và Du lịch tầm soát sức khỏe.
+      Thông tin liên hệ: 0967.652.331 hoặc Zalo https://zalo.me/0967652331.
+      Vui lòng trả lời bằng tiếng Việt, phong cách chuyên nghiệp, sang trọng và tận tâm.`,
     },
   });
 };

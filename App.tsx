@@ -2,14 +2,12 @@
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import AIPlanner from './components/AIPlanner';
 import TourGrid from './components/TourGrid';
 import WhyUs from './components/WhyUs';
 import Process from './components/Process';
 import LeadForm from './components/LeadForm';
 import Footer from './components/Footer';
 import FloatingContact from './components/FloatingContact';
-import AIConsultant from './components/AIConsultant';
 import { REVIEWS } from './constants';
 
 const App: React.FC = () => {
@@ -36,8 +34,6 @@ const App: React.FC = () => {
           <TourGrid />
 
           <Process />
-
-          <AIPlanner />
 
           {/* Reviews Section */}
           <section id="reviews" className="py-24 bg-slate-50/50 backdrop-blur-sm border-y border-slate-100">
@@ -94,7 +90,6 @@ const App: React.FC = () => {
         </main>
         <Footer />
         <FloatingContact />
-        <AIConsultant />
       </div>
     </div>
   );

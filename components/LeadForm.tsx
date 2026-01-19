@@ -13,24 +13,24 @@ const LeadForm: React.FC = () => {
     _gotcha: '' 
   });
 
-  // URL Formspree chính thức của bạn
+  // URL Formspree của bạn
   const FORMSPREE_URL = "https://formspree.io/f/mrebnbag";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData._gotcha) return; // Chống spam bot
+    if (formData._gotcha) return; // Chặn bot spam
 
     setLoading(true);
 
-    // Chuẩn bị payload gửi đi
-    const payload = {
-      "Khách hàng": formData.fullName,
+    // Chuyển đổi dữ liệu sang tiếng Việt để email gửi về Gmail dễ đọc hơn
+    const dataToSend = {
+      "Họ tên khách hàng": formData.fullName,
       "Số điện thoại": formData.phone,
-      "Email": formData.email,
+      "Địa chỉ Email": formData.email,
       "Dịch vụ quan tâm": formData.service,
-      "Yêu cầu chi tiết": formData.note,
-      "_subject": `[YÊU CẦU TOUR MỚI] - ${formData.fullName} (${formData.phone})`,
-      "Source": "Website SigFlex Japan"
+      "Nội dung yêu cầu chi tiết": formData.note,
+      "_subject": `[SigFlex Website] Yêu cầu từ: ${formData.fullName} - ${formData.service}`,
+      "Nguồn": "Form Liên hệ chính (LeadForm)"
     };
 
     try {
@@ -40,12 +40,12 @@ const LeadForm: React.FC = () => {
           "Content-Type": "application/json",
           "Accept": "application/json"
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(dataToSend)
       });
       
       if (response.ok) {
         setSubmitted(true);
-        // Reset form sau khi gửi thành công
+        // Reset form
         setFormData({
           fullName: '',
           phone: '',
@@ -56,11 +56,11 @@ const LeadForm: React.FC = () => {
         });
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Không thể gửi yêu cầu");
+        throw new Error(errorData.error || "Lỗi gửi form");
       }
     } catch (error: any) {
-      console.error("Formspree error:", error);
-      alert("❌ Có lỗi xảy ra: " + error.message + "\n\nQuý khách vui lòng liên hệ Hotline/Zalo 0967.652.331 để được hỗ trợ ngay lập tức!");
+      console.error("Formspree Error:", error);
+      alert("⚠️ Không thể gửi yêu cầu lúc này. Quý khách vui lòng liên hệ Hotline/Zalo: 0967.652.331 để được hỗ trợ ngay lập tức!");
     } finally {
       setLoading(false);
     }
@@ -85,14 +85,14 @@ const LeadForm: React.FC = () => {
                 Kiến tạo hành trình <br/><span className="text-yellow-400">Độc bản & Đẳng cấp</span>
               </h2>
               <p className="text-red-50 text-lg mb-12 leading-relaxed opacity-90 font-light">
-                Hãy để chúng tôi lắng nghe mong muốn của bạn. SigFlex Japan cam kết phản hồi lịch trình chi tiết và báo giá trong vòng 24h.
+                Hãy chia sẻ mong muốn của bạn. Đội ngũ chuyên gia SigFlex Japan sẽ liên hệ tư vấn và gửi báo giá chi tiết trong vòng 24h.
               </p>
               
               <div className="space-y-6">
                 {[
-                  { title: "Tư vấn cá nhân hóa", desc: "Thiết kế đúng gu, đúng ngân sách và phong cách của bạn" },
-                  { title: "Hỗ trợ Visa 99%", desc: "Chuyên xử lý hồ sơ khó, nhanh chóng và bảo mật" },
-                  { title: "Xe riêng đưa đón", desc: "Sự riêng tư, thoải mái và đẳng cấp tuyệt đối tại Nhật" }
+                  { title: "Tư vấn cá nhân hóa", desc: "Thiết kế hành trình riêng theo sở thích và ngân sách" },
+                  { title: "Hỗ trợ Visa tận tâm", desc: "Tỷ lệ đậu 99% kể cả các trường hợp hồ sơ khó" },
+                  { title: "Dịch vụ Xe riêng", desc: "Sự riêng tư và thoải mái tuyệt đối trên mọi nẻo đường Nhật" }
                 ].map((item, i) => (
                   <div key={i} className="flex items-start space-x-4">
                     <div className="w-10 h-10 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 border border-white/20">
@@ -116,35 +116,35 @@ const LeadForm: React.FC = () => {
                 </div>
                 <h3 className="text-4xl font-bold text-slate-900 mb-4 font-luxury">Gửi yêu cầu thành công!</h3>
                 <p className="text-slate-500 text-lg max-w-md mx-auto leading-relaxed mb-10">
-                  Cảm ơn Quý khách. Chuyên viên tư vấn của SigFlex Japan sẽ liên hệ lại qua số điện thoại hoặc email ngay khi bộ phận điều hành xử lý xong yêu cầu.
+                  Cảm ơn Quý khách đã tin tưởng. Chuyên viên của SigFlex Japan đã nhận được thông tin và sẽ sớm phản hồi qua số điện thoại/email của bạn.
                 </p>
                 <button 
                   onClick={() => setSubmitted(false)} 
-                  className="bg-slate-900 text-white px-10 py-4 rounded-2xl font-bold hover:bg-red-600 transition-all shadow-lg active:scale-95"
+                  className="bg-slate-900 text-white px-10 py-4 rounded-2xl font-bold hover:bg-red-600 transition-all shadow-lg"
                 >
-                  Gửi thêm yêu cầu khác
+                  Gửi yêu cầu khác
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Honeypot field để chặn bot */}
+                {/* Honeypot field - Không hiển thị cho người dùng */}
                 <input type="text" name="_gotcha" style={{display:'none'}} onChange={handleChange} />
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Họ và tên Quý khách *</label>
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Họ và tên *</label>
                     <input 
                       type="text" 
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleChange}
                       required 
-                      placeholder="Ví dụ: Nguyễn Minh Hoàng"
+                      placeholder="Nguyễn Văn A"
                       className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none font-medium" 
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Số điện thoại liên hệ *</label>
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Số điện thoại *</label>
                     <input 
                       type="tel" 
                       name="phone"
@@ -159,14 +159,14 @@ const LeadForm: React.FC = () => {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Email nhận báo giá *</label>
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Địa chỉ Email *</label>
                     <input 
                       type="email" 
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
                       required 
-                      placeholder="email@cua-ban.com"
+                      placeholder="khachhang@email.com"
                       className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none font-medium" 
                     />
                   </div>
@@ -180,22 +180,22 @@ const LeadForm: React.FC = () => {
                     >
                       <option value="Tour Private">Tour Private (Xe riêng)</option>
                       <option value="Visa Nhật Bản">Tư vấn Visa Nhật Bản</option>
-                      <option value="Tour Golf">Nghỉ dưỡng & Đánh Golf</option>
-                      <option value="Tầm soát sức khỏe">Du lịch & Tầm soát sức khỏe</option>
-                      <option value="Yêu cầu khác">Yêu cầu thiết kế riêng...</option>
+                      <option value="Tour Golf Luxury">Nghỉ dưỡng & Đánh Golf</option>
+                      <option value="Tầm soát sức khỏe">Tour Tầm soát sức khỏe</option>
+                      <option value="Yêu cầu đặc biệt">Yêu cầu thiết kế riêng khác...</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Mong muốn cụ thể cho hành trình</label>
+                  <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Ghi chú hoặc mong muốn cụ thể</label>
                   <textarea 
                     name="note"
                     value={formData.note}
                     onChange={handleChange}
                     rows={4} 
                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 focus:ring-4 focus:ring-red-500/5 focus:border-red-500 transition-all outline-none resize-none font-medium" 
-                    placeholder="Ví dụ: Gia đình 4 người, đi vào tháng 10 ngắm lá đỏ, muốn ăn bò Kobe chuẩn A5 và đi xe riêng suốt tuyến..."
+                    placeholder="Ví dụ: Gia đình 4 người, muốn đi hái trái cây và ở Ryokan truyền thống tại Kyoto..."
                   ></textarea>
                 </div>
                 
@@ -205,7 +205,7 @@ const LeadForm: React.FC = () => {
                   className={`w-full text-white py-5 rounded-[2rem] font-black text-xl shadow-2xl transition-all relative overflow-hidden group ${loading ? 'bg-slate-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 hover:shadow-red-500/40 hover:-translate-y-1'}`}
                 >
                   <span className={`flex items-center justify-center transition-all ${loading ? 'opacity-0' : 'opacity-100'}`}>
-                    🚀 Gửi yêu cầu báo giá độc bản
+                    🚀 Gửi yêu cầu ngay
                   </span>
                   {loading && (
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -215,7 +215,7 @@ const LeadForm: React.FC = () => {
                 </button>
                 
                 <p className="text-center text-[9px] text-slate-400 font-bold uppercase tracking-[0.2em] pt-2">
-                  🔒 Dữ liệu được mã hóa và bảo mật bởi hệ thống lữ hành SigFlex Japan
+                  🔒 Thông tin của bạn được bảo mật tuyệt đối bởi SigFlex Japan
                 </p>
               </form>
             )}
